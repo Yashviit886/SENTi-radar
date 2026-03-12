@@ -55,35 +55,57 @@ function extractSentences(text: string, minLen = 25, maxLen = 320): string[] {
     .filter((s) => !/^(https?:|www\.|@|#|\d{1,2}:\d{2})/i.test(s));
 }
 
-/** Parse tweet text from rendered X search HTML. */
-function parseXHtml(html: string): string[] {
+/**
+ * Parse post titles and snippets from rendered Reddit search HTML.
+ *
+ * Reddit's new design uses `<shreddit-post>` custom elements whose
+ * `post-title` attribute contains the title.  We fall back to `<h3>` tags
+ * (classic Reddit) and `<p>` body-preview paragraphs.
+ */
+function parseRedditHtml(html: string): string[] {
   const results: string[] = [];
 
-  // Primary: data-testid="tweetText" anchored segments
-  const tweetRe = /data-testid="tweetText"[\s\S]{0,2000}?(?=data-testid="|$)/gi;
+  // Strategy 1: shreddit-post web-component attribute
+  const shredditRe = /post-title="([^"]{20,300})"/gi;
   let match: RegExpExecArray | null;
 
-  while ((match = tweetRe.exec(html)) !== null) {
-    const text = stripHtml(match[0]).replace(/^tweetText\s*/i, "").trim();
-    for (const s of extractSentences(text, 20, 300)) {
-      if (!results.includes(s)) results.push(s);
-    }
-    if (results.length >= 25) break;
+  while ((match = shredditRe.exec(html)) !== null) {
+    const title = decodeHtmlEntities(match[1]).trim();
+    if (!results.includes(title)) results.push(title);
+    if (results.length >= 20) break;
   }
 
-  // Fallback: article tags
+  // Strategy 2: h3 headings (classic Reddit / mobile fallback)
   if (results.length < 3) {
-    const articleRe = /<article[\s\S]*?<\/article>/gi;
-    while ((match = articleRe.exec(html)) !== null) {
-      const text = stripHtml(match[0]);
-      for (const s of extractSentences(text, 30, 280)) {
-        if (!results.includes(s)) results.push(s);
-      }
-      if (results.length >= 25) break;
+    const h3Re = /<h3[^>]*>([\s\S]{20,300}?)<\/h3>/gi;
+    while ((match = h3Re.exec(html)) !== null) {
+      const text = stripHtml(match[1]).trim();
+      if (text.length >= 20 && !results.includes(text)) results.push(text);
+      if (results.length >= 20) break;
     }
   }
 
-  return results.slice(0, 25);
+  // Strategy 3: paragraph snippets (post-body previews)
+  if (results.length < 5) {
+    const pRe = /<p[^>]*>([\s\S]{30,300}?)<\/p>/gi;
+    while ((match = pRe.exec(html)) !== null) {
+      const text = stripHtml(match[1]).trim();
+      if (text.length >= 30 && !results.includes(text)) results.push(text);
+      if (results.length >= 20) break;
+    }
+  }
+
+  // Strategy 4: generic sentence extraction from full page text
+  if (results.length < 5) {
+    const plain = stripHtml(html);
+    const sentences = extractSentences(plain, 30, 300);
+    for (const s of sentences) {
+      if (!results.includes(s)) results.push(s);
+      if (results.length >= 20) break;
+    }
+  }
+
+  return results.slice(0, 20);
 }
 
 // ── Main serve ────────────────────────────────────────────────────────────────
@@ -94,7 +116,6 @@ serve(async (req) => {
 
   try {
     const SCRAPE_DO_TOKEN = Deno.env.get("SCRAPE_DO_TOKEN") || "";
-    const YOUTUBE_API_KEY = Deno.env.get("YOUTUBE_API_KEY") || "";
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
@@ -103,7 +124,6 @@ serve(async (req) => {
     const { topic_id } = await req.json();
     if (!topic_id) throw new Error("topic_id is required");
 
-    // Get topic query
     const { data: topic, error: topicError } = await supabase
       .from("topics")
       .select("*")
@@ -117,103 +137,67 @@ serve(async (req) => {
       text: string;
       author: string;
       created_at: string;
-      platform: string;
     }> = [];
-    let sourceInfo = "";
-    let scrapeStatus: "ok" | "blocked" | "quota" | "no_token" | "error" | "idle" = "idle";
+    let scrapeStatus: "ok" | "blocked" | "quota" | "no_token" | "error" = "error";
 
-    // ── Step 1: Scrape X via Scrape.do ────────────────────────────────────────
-    if (SCRAPE_DO_TOKEN) {
+    if (!SCRAPE_DO_TOKEN) {
+      scrapeStatus = "no_token";
+      console.warn("SCRAPE_DO_TOKEN not set — skipping Reddit scrape");
+    } else {
       try {
-        const xUrl = `https://x.com/search?q=${encodeURIComponent(topic.query)}&f=live`;
-        const scrapeUrl = buildScrapeDoUrl(SCRAPE_DO_TOKEN, xUrl);
+        const redditUrl = `https://www.reddit.com/search/?q=${encodeURIComponent(topic.query)}&sort=new`;
+        const scrapeUrl = buildScrapeDoUrl(SCRAPE_DO_TOKEN, redditUrl);
 
-        console.log(`Scraping X for "${topic.query}" via Scrape.do…`);
+        console.log(`Scraping Reddit for "${topic.query}" via Scrape.do…`);
         const res = await fetch(scrapeUrl);
 
         if (res.status === 402 || res.status === 429) {
-          console.warn("Scrape.do quota exceeded for X");
           scrapeStatus = "quota";
+          console.warn("Scrape.do quota exceeded for Reddit");
         } else if (res.status === 403 || res.status === 407) {
-          console.warn("Scrape.do blocked for X");
           scrapeStatus = "blocked";
+          console.warn("Scrape.do blocked for Reddit");
         } else if (res.ok) {
           const html = await res.text();
-          const isLoginWall =
-            html.toLowerCase().includes("log in to x") && !html.toLowerCase().includes('data-testid="tweet"');
 
-          if (!isLoginWall) {
-            const sentences = parseXHtml(html);
+          if (html.includes("Are you a human?") || html.toLowerCase().includes("are you a human") || (!html.toLowerCase().includes("reddit") && html.length < 5000)) {
+            scrapeStatus = "blocked";
+            console.warn("Scrape.do/Reddit: bot-check or empty page detected");
+          } else {
+            const sentences = parseRedditHtml(html);
             if (sentences.length > 0) {
               posts = sentences.map((text, i) => ({
-                id: `x_scrape_${topic_id}_${i}`,
+                id: `reddit_scrape_${topic_id}_${i}`,
                 text,
-                author: "@x_user",
+                author: "reddit_user",
                 created_at: new Date().toISOString(),
-                platform: "x",
               }));
-              sourceInfo = "Scrape.do (X/Twitter)";
               scrapeStatus = "ok";
-              console.log(`Scrape.do/X: extracted ${posts.length} posts`);
+              console.log(`Scrape.do/Reddit: extracted ${posts.length} posts`);
             } else {
               scrapeStatus = "blocked";
-              console.warn("Scrape.do/X: no tweet text extracted (possible auth wall)");
+              console.warn("Scrape.do/Reddit: no post text extracted");
             }
-          } else {
-            scrapeStatus = "blocked";
-            console.warn("Scrape.do/X: login wall detected");
           }
         } else {
           scrapeStatus = "error";
-          console.error(`Scrape.do/X HTTP ${res.status}`);
+          console.error(`Scrape.do/Reddit HTTP ${res.status}`);
         }
       } catch (e) {
         scrapeStatus = "error";
-        console.error("Scrape.do/X exception:", e);
-      }
-    } else {
-      scrapeStatus = "no_token";
-      console.warn("SCRAPE_DO_TOKEN not set — skipping X scrape");
-    }
-
-    // ── Step 2: YouTube fallback (if X scraping did not yield data) ───────────
-    if (posts.length === 0 && YOUTUBE_API_KEY) {
-      console.log("Trying YouTube fallback…");
-      try {
-        const ytUrl = new URL("https://www.googleapis.com/youtube/v3/search");
-        ytUrl.searchParams.set("part", "snippet");
-        ytUrl.searchParams.set("q", topic.query);
-        ytUrl.searchParams.set("maxResults", "15");
-        ytUrl.searchParams.set("type", "video");
-        ytUrl.searchParams.set("key", YOUTUBE_API_KEY);
-
-        const ytRes = await fetch(ytUrl.toString());
-        if (ytRes.ok) {
-          const ytData = await ytRes.json();
-          sourceInfo = "YouTube Search API";
-          posts = (ytData.items || []).map((item: { id?: { videoId?: string }; snippet: { title: string; description: string; channelTitle?: string; publishedAt?: string } }) => ({
-            id: item.id?.videoId || Math.random().toString(),
-            text: `${item.snippet.title}: ${item.snippet.description}`,
-            author: item.snippet.channelTitle || "youtube_user",
-            created_at: item.snippet.publishedAt || new Date().toISOString(),
-            platform: "youtube",
-          }));
-          console.log(`YouTube fallback: fetched ${posts.length} items`);
-        }
-      } catch (e) {
-        console.error("YouTube fallback failed:", e);
+        console.error("Scrape.do/Reddit exception:", e);
       }
     }
 
-    // ── Step 3: Persist to DB ─────────────────────────────────────────────────
+    // ── Persist to DB ─────────────────────────────────────────────────────────
     let inserted = 0;
     for (const post of posts) {
       const { error } = await supabase.from("posts").upsert(
         {
           topic_id,
-          platform: post.platform || "x",
+          platform: "reddit",
           external_id: post.id,
-          author: post.author.startsWith("@") ? post.author : `@${post.author}`,
+          author: `@${post.author}`,
           content: post.text,
           posted_at: post.created_at,
         },
@@ -224,16 +208,16 @@ serve(async (req) => {
 
     return new Response(
       JSON.stringify({
-        success: true,
+        success: scrapeStatus === "ok",
         fetched: posts.length,
         inserted,
-        info: sourceInfo || "No data source available",
+        info: scrapeStatus === "ok" ? "Scrape.do (Reddit)" : `Reddit unavailable: ${scrapeStatus}`,
         scrape_status: scrapeStatus,
       }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error) {
-    console.error("fetch-twitter unhandled error:", error);
+    console.error("fetch-reddit unhandled error:", error);
     return new Response(
       JSON.stringify({
         success: false,

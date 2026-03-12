@@ -1,73 +1,124 @@
-# Welcome to your Lovable project
+# SENTi-radar — Real-Time Public Sentiment Radar
 
-## Project info
+An AI-powered dashboard that delivers live emotional insights from social media (X/Twitter, Reddit) and news sources. Users can monitor public reactions to any topic—custom or trending—with rich, human-readable summaries.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## What technologies are used?
 
-## How can I edit this code?
+- **Vite + TypeScript + React** — frontend
+- **shadcn-ui + Tailwind CSS** — UI components
+- **Supabase** — database, auth, realtime, edge functions
+- **Scrape.do** — JavaScript-rendering proxy for live X and Reddit scraping
+- **YouTube Data API v3** — video comments (server-side edge function)
+- **Gemini / Groq** — AI-powered sentiment summaries (optional; app degrades gracefully)
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## Setup
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+### 1. Clone and install
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
 git clone <YOUR_GIT_URL>
+cd SENTi-radar
+npm install
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 2. Configure environment variables
 
-# Step 3: Install the necessary dependencies.
-npm i
+Copy `.env.example` to `.env` and fill in your keys:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```sh
+cp .env.example .env
+```
+
+Open `.env`:
+
+```env
+# Scrape.do — live X (Twitter) and Reddit data
+VITE_SCRAPE_TOKEN=your_scrape_do_token_here
+
+# YouTube Data API v3 — video comment fetching
+VITE_YOUTUBE_API_KEY=your_youtube_api_key_here
+
+# AI summaries (optional — app works without these)
+VITE_GEMINI_API_KEY=your_gemini_api_key_here
+VITE_GROQ_API_KEY=your_groq_api_key_here
+
+# Supabase
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+```
+
+**Never commit your `.env` file** — it is already listed in `.gitignore`.
+
+### 3. Supabase Edge Function secrets
+
+The server-side edge functions (`fetch-twitter`, `fetch-reddit`, `fetch-youtube`, `analyze-sentiment`) need the following Supabase secrets set via the Supabase dashboard or CLI:
+
+| Secret                  | Description                            |
+|-------------------------|----------------------------------------|
+| `SCRAPE_DO_TOKEN`       | Scrape.do API token (same key as `VITE_SCRAPE_TOKEN`) |
+| `YOUTUBE_API_KEY`       | YouTube Data API v3 key                |
+| `GEMINI_API_KEY`        | Google Gemini API key (optional)       |
+
+### 4. Run the development server
+
+```sh
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Scrape.do Integration
 
-**Use GitHub Codespaces**
+The app uses [Scrape.do](https://scrape.do) to scrape JavaScript-heavy pages on X and Reddit in real time. All requests use:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- `render=true` — full JS rendering
+- `super=true` — residential/mobile proxies for anti-bot bypass
+- `waitUntil=networkidle0` — wait for all scripts to finish loading
+- `geoCode=us` — US-based results
 
-## What technologies are used for this project?
+### Architecture
 
-This project is built with:
+```
+User searches topic
+    │
+    ├── fetchSocialPosts() [src/services/scrapeProvider.ts]
+    │       ├── fetchFromX()      → Scrape.do → x.com/search
+    │       └── fetchFromReddit() → Scrape.do → reddit.com/search
+    │
+    ├── fetchYouTubeComments() → YouTube Data API v3
+    │
+    └── fetchNewsHeadlines()   → Scrape.do → Google News RSS
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Adding new providers
+
+`src/services/scrapeProvider.ts` is designed for easy extension:
+
+1. Write a `fetchFromFirecrawl()` function returning `{ posts: ScrapePost[], status }`.
+2. Add a `firecrawl` key to `ProviderStatus`.
+3. Register it in `fetchSocialPosts()` via `Promise.allSettled([...])`.
+
+### Caveats
+
+- **X login wall**: X increasingly requires login for search results. Residential proxies (`super=true`) help but are not a guarantee.
+- **Reddit bot detection**: Reddit may return a bot-check page. The parser detects this and returns `blocked` status.
+- **HTML structure changes**: Parsers are based on current site markup. If X or Reddit redesigns, text extraction may break until parsers are updated.
+- **Rate limits**: Scrape.do has usage quotas. The app shows `Quota exceeded` in source badges when the limit is hit.
+
+---
+
+## UI Source Indicators
+
+Each topic analysis panel shows live source badges:
+
+- 🔵 **X Live** — real-time posts scraped from X search
+- 🟠 **Reddit Live** — posts scraped from Reddit search
+- 🟡 **Scraping unavailable** — fallback to YouTube/News
+
+---
 
 ## How can I deploy this project?
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share → Publish, or deploy via any static hosting + Supabase.
