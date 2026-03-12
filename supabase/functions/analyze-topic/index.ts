@@ -50,8 +50,8 @@ serve(async (req) => {
       topicId = newTopic.id;
     }
 
-    // ── Fetch from Twitter / X (with built-in fallback inside the function) ──
-    const twitterResult = { success: false, info: "" };
+    // ── Fetch from X via Scrape.do (with YouTube fallback inside the function) ─
+    const twitterResult = { success: false, info: "", scrape_status: "" };
     try {
       const twitterRes = await fetch(
         `${supabaseUrl}/functions/v1/fetch-twitter`,
@@ -68,10 +68,9 @@ serve(async (req) => {
       if (twitterRes.ok) {
         const twitterData = await twitterRes.json();
         twitterResult.success = twitterData.success === true;
-        // Carry through the info string (which fallback tier was used) for debug
         if (twitterData.info) twitterResult.info = twitterData.info;
+        if (twitterData.scrape_status) twitterResult.scrape_status = twitterData.scrape_status;
       } else {
-        // Non-ok HTTP from the Edge Function itself — log & continue silently
         const body = await twitterRes.text().catch(() => "");
         console.error(
           `fetch-twitter Edge Function returned ${twitterRes.status}:`,
@@ -80,10 +79,43 @@ serve(async (req) => {
         twitterResult.info = `fetch-twitter returned HTTP ${twitterRes.status}`;
       }
     } catch (e) {
-      // Network / JSON parse failure — continue silently, other data sources suffice
       const msg = e instanceof Error ? e.message : "unknown";
       console.error("Could not reach fetch-twitter function:", msg);
       twitterResult.info = `fetch-twitter unreachable: ${msg}`;
+    }
+
+    // ── Fetch from Reddit via Scrape.do ───────────────────────────────────────
+    const redditResult = { success: false, info: "", scrape_status: "" };
+    try {
+      const redditRes = await fetch(
+        `${supabaseUrl}/functions/v1/fetch-reddit`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${supabaseServiceKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ topic_id: topicId }),
+        },
+      );
+
+      if (redditRes.ok) {
+        const redditData = await redditRes.json();
+        redditResult.success = redditData.success === true;
+        if (redditData.info) redditResult.info = redditData.info;
+        if (redditData.scrape_status) redditResult.scrape_status = redditData.scrape_status;
+      } else {
+        const body = await redditRes.text().catch(() => "");
+        console.error(
+          `fetch-reddit Edge Function returned ${redditRes.status}:`,
+          body.substring(0, 300),
+        );
+        redditResult.info = `fetch-reddit returned HTTP ${redditRes.status}`;
+      }
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "unknown";
+      console.error("Could not reach fetch-reddit function:", msg);
+      redditResult.info = `fetch-reddit unreachable: ${msg}`;
     }
 
     // ── Fetch from YouTube ────────────────────────────────────────────────────
@@ -154,6 +186,7 @@ serve(async (req) => {
         success: true,
         topic_id: topicId,
         twitter: twitterResult,
+        reddit: redditResult,
         youtube: youtubeResult,
         analysis: analysisResult,
       }),

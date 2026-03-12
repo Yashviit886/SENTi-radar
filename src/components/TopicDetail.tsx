@@ -21,6 +21,13 @@ interface Props {
   onClose: () => void;
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// SECURITY NOTE: VITE_ prefixed variables are embedded in the client-side JS
+// bundle and visible to anyone who inspects the page source.  For a production
+// deployment, consider moving all Scrape.do calls to Supabase Edge Functions and
+// removing VITE_SCRAPE_TOKEN from the frontend entirely (use SCRAPE_DO_TOKEN as
+// a Supabase secret instead).  See README for step-by-step instructions.
+// ─────────────────────────────────────────────────────────────────────────────
 const SCRAPE_TOKEN = import.meta.env.VITE_SCRAPE_TOKEN || '';
 const YOUTUBE_KEY = import.meta.env.VITE_YOUTUBE_API_KEY || '';
 
@@ -170,7 +177,7 @@ async function fetchYouTubeComments(query: string): Promise<{ comments: string[]
     const searchRes = await fetch(searchUrl);
     if (!searchRes.ok) { console.warn('YouTube search failed:', searchRes.status); return { comments: [], count: 0 }; }
     const searchData = await searchRes.json();
-    const videoIds: string[] = (searchData.items || []).map((item: any) => item.id?.videoId).filter(Boolean);
+    const videoIds: string[] = (searchData.items || []).map((item: { id?: { videoId?: string } }) => item.id?.videoId).filter((id): id is string => Boolean(id));
 
     if (videoIds.length === 0) return { comments: [], count: 0 };
 
@@ -249,7 +256,7 @@ function analyzeTopicFully(
     if (score > bestScore) { bestScore = score; bestTheme = theme; }
   }
 
-  // Emotion analysis on ALL texts (title + headlines + YT comments)
+  // Emotion analysis on ALL texts
   const emotionData = scoreEmotions(allTexts);
 
   const negKw = ['war','attack','crisis','shortage','tension','conflict','scandal','ban','protest','threat','crash','decline','fail','corrupt','dangerous'];
@@ -260,18 +267,31 @@ function analyzeTopicFully(
   const sentiment: 'positive' | 'negative' | 'mixed' = negCount > posCount * 1.3 ? 'negative' : posCount > negCount * 1.3 ? 'positive' : 'mixed';
   const crisisLevel: 'none' | 'medium' | 'high' = negCount >= 4 ? 'high' : negCount >= 2 ? 'medium' : 'none';
 
-  // Build takeaways: theme templates + real headlines
   const takeaways: string[] = [];
   const themeConfig = TOPIC_THEMES[bestTheme];
   if (themeConfig) takeaways.push(...themeConfig.templates.slice(0, 3));
-  for (const h of headlines.slice(0, 4)) {
+  for (const h of [...headlines, ...xPosts.slice(0, 2), ...redditPosts.slice(0, 2)].slice(0, 4)) {
     if (h.length > 20 && h.length < 200 && takeaways.length < 5) {
-      takeaways.push(`**Headline:** _"${h}"_`);
+      takeaways.push(`**Source:** _"${h}"_`);
     }
   }
   while (takeaways.length < 5) {
     takeaways.push(`Discussion volume is ${negCount > 2 ? 'elevated — public attention is surging' : 'moderate — conversation is steadily building'}`);
   }
+
+  // Determine dataSource label
+  const hasX = xPosts.length > 0;
+  const hasReddit = redditPosts.length > 0;
+  const hasYt = comments.length > 0;
+  const hasRss = headlines.length > 0;
+  let dataSource: AnalysisResult['dataSource'] = 'keyword';
+  if (hasX && hasReddit && (hasYt || hasRss)) dataSource = 'x+reddit+youtube+rss';
+  else if (hasX && hasReddit) dataSource = 'x+reddit';
+  else if (hasX && hasRss) dataSource = 'x+rss';
+  else if (hasReddit && hasRss) dataSource = 'reddit+rss';
+  else if (hasYt && hasRss) dataSource = 'youtube+rss';
+  else if (hasYt) dataSource = 'youtube+rss';
+  else if (hasRss) dataSource = 'rss';
 
   return {
     headlines,
@@ -353,6 +373,11 @@ function buildLocalSummary(topic: TopicCard, analysis: AnalysisResult): string {
   const sourceDesc = hasScraped ? `${dataSource} posts and comments` : comments.length > 0 ? 'YouTube comments and news headlines' : 'news headlines';
 
   let narrative: string;
+  const hasLiveSocial = xPosts.length > 0 || redditPosts.length > 0;
+  const sourceDesc = hasLiveSocial
+    ? `X/Twitter and Reddit posts`
+    : comments.length > 0 ? 'YouTube comments and news headlines' : 'news headlines';
+
   if (sentiment === 'negative') {
     narrative = `Public sentiment on **${topic.title}** is overwhelmingly negative. **${cap(dominantEmotion)} (${dominantPct}%)** and **${cap(secondEmotion)} (${secondPct}%)** dominate — derived from ${displayCount}+ real ${sourceDesc}.${topSample ? ` Example: ${topSample}` : ''}`;
   } else if (sentiment === 'positive') {
@@ -377,7 +402,24 @@ function buildLLMPrompt(topic: TopicCard, analysis: AnalysisResult) {
   const sampleComments = analysis.comments.slice(0, 8).map((c, i) => `${i + 1}. "${c.substring(0, 120)}"`).join('\n');
   const sampleScraped = analysis.scrapedPosts.slice(0, 6).map((p, i) => `${i + 1}. [${p.platform.toUpperCase()}] "${p.text.substring(0, 120)}"`).join('\n');
 
-  const system = `You are a razor-sharp real-time sentiment analyst. You analyze REAL social media comments and news data. Be specific and opinionated. Reference "${topic.title}" by name. Never be generic.`;
+  const sourceMap: Record<string, string> = {
+    'x+reddit+youtube+rss': 'X/Twitter · Reddit · YouTube · Google News',
+    'x+reddit': 'X/Twitter · Reddit',
+    'x+rss': 'X/Twitter · Google News',
+    'reddit+rss': 'Reddit · Google News',
+    'youtube+rss': 'YouTube · Google News',
+    'rss': 'Google News',
+    'keyword': 'Keyword Analysis',
+  };
+  const sourceLabel = sourceMap[analysis.dataSource] || 'Multiple Sources';
+
+  const allSamples = [
+    ...analysis.xPosts.slice(0, 4).map((t, i) => `X[${i+1}]: "${t.substring(0, 120)}"`),
+    ...analysis.redditPosts.slice(0, 4).map((t, i) => `Reddit[${i+1}]: "${t.substring(0, 120)}"`),
+    ...analysis.comments.slice(0, 4).map((t, i) => `YouTube[${i+1}]: "${t.substring(0, 120)}"`),
+  ].join('\n');
+
+  const system = `You are a razor-sharp real-time sentiment analyst. You analyze REAL social media posts and news data. Be specific and opinionated. Reference "${topic.title}" by name. Never be generic.`;
   const user = `Analyze public sentiment for "${topic.title}" based on REAL data.
 
 SOURCE: ${analysis.dataSource}
@@ -394,7 +436,7 @@ Write this EXACT markdown format:
 
 ### [🔴/🟡/🟢/🔵] [Emotion1] & [Emotion2] Dominate – [Risk/Opportunity]
 
-[2-3 sentences specific to "${topic.title}". Reference real comments/headlines as evidence. Include emotion %s. Be sharp and opinionated.]
+[2-3 sentences specific to "${topic.title}". Reference real posts/headlines as evidence. Include emotion %s. Be sharp and opinionated.]
 
 **People's Voice – Key Takeaways**
 • [Insight from real posts or headlines]
@@ -440,10 +482,25 @@ async function streamSummary({ topic, onDelta, onDone, onError, onEmotionsReady,
   // Step 2: Analyze everything together
   const analysis = analyzeTopicFully(topic.title, rssHeadlines, comments, scrapedPosts, scrapeDoResults);
 
-  // Step 3: Emit LIVE emotions for the UI to update immediately
+  console.log(`Data: ${xPosts.length} X posts, ${redditPosts.length} Reddit posts, ${ytCount} YT comments, ${rssHeadlines.length} headlines`);
+
+  // Step 2: Analyse everything together
+  const analysis = analyzeTopicFully(topic.title, rssHeadlines, comments, xPosts, redditPosts);
+
+  // Step 3: Emit live emotions immediately
+  const sourceMap: Record<string, string> = {
+    'x+reddit+youtube+rss': 'X · Reddit · YouTube · News',
+    'x+reddit': 'X · Reddit',
+    'x+rss': 'X · News',
+    'reddit+rss': 'Reddit · News',
+    'youtube+rss': 'YouTube · News',
+    'rss': 'News',
+    'keyword': 'Keyword',
+  };
   onEmotionsReady(
     analysis.emotions as EmotionData[],
     analysis.commentCount,
+    sourceMap[analysis.dataSource] || 'Multiple Sources',
     analysis.dataSource,
   );
 
@@ -472,7 +529,7 @@ async function streamSummary({ topic, onDelta, onDone, onError, onEmotionsReady,
           buf += decoder.decode(value, { stream: true });
           let nl: number;
           while ((nl = buf.indexOf('\n')) !== -1) {
-            let line = buf.slice(0, nl).trim();
+            const line = buf.slice(0, nl).trim();
             buf = buf.slice(nl + 1);
             if (!line.startsWith('data: ')) continue;
             const jsonStr = line.slice(6).trim();
@@ -519,6 +576,11 @@ const TopicDetail = ({ topic, onClose }: Props) => {
   const [summary, setSummary] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [summaryError, setSummaryError] = useState('');
+  // Live emotions from social analysis (override topic.emotions when available)
+  const [liveEmotions, setLiveEmotions] = useState<EmotionData[] | null>(null);
+  const [emotionSource, setEmotionSource] = useState<string>('');
+  const [emotionCount, setEmotionCount] = useState(0);
+  const [providerStatus, setProviderStatus] = useState<ProviderStatus | null>(null);
   // Live emotions from analysis (override topic.emotions when available)
   const [liveEmotions, setLiveEmotions] = useState<EmotionData[] | null>(null);
   const [emotionSource, setEmotionSource] = useState<string>('');
@@ -530,6 +592,7 @@ const TopicDetail = ({ topic, onClose }: Props) => {
   const runAnalysis = (t: TopicCard) => {
     setSummary(''); setSummaryError(''); setIsStreaming(true);
     setLiveEmotions(null); setEmotionSource(''); setEmotionCount(0);
+    setProviderStatus(null);
     setScrapeDoResults([]);
     streamSummary({
       topic: t,
@@ -541,6 +604,7 @@ const TopicDetail = ({ topic, onClose }: Props) => {
         setEmotionCount(count);
         setEmotionSource(source);
       },
+      onProviderStatus: (status) => setProviderStatus(status),
       onScrapeDoResults: (results) => setScrapeDoResults(results),
     });
   };
@@ -581,6 +645,68 @@ const TopicDetail = ({ topic, onClose }: Props) => {
         </button>
       </div>
 
+      {/* ── Provider status banners ──────────────────────────────────────────── */}
+      {providerStatus && (
+        <div className="flex flex-wrap gap-2">
+          {/* X status badge */}
+          <div className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium border ${
+            providerStatus.x === 'ok'
+              ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20'
+              : providerStatus.x === 'no_token'
+              ? 'bg-muted text-muted-foreground border-border'
+              : 'bg-destructive/10 text-destructive border-destructive/20'
+          }`}>
+            {providerStatus.x === 'ok' ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
+            <Twitter className="h-3 w-3" />
+            X: {providerStatusLabel(providerStatus.x)}
+          </div>
+
+          {/* Reddit status badge */}
+          <div className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium border ${
+            providerStatus.reddit === 'ok'
+              ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20'
+              : providerStatus.reddit === 'no_token'
+              ? 'bg-muted text-muted-foreground border-border'
+              : 'bg-destructive/10 text-destructive border-destructive/20'
+          }`}>
+            {providerStatus.reddit === 'ok' ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
+            <MessageSquare className="h-3 w-3" />
+            Reddit: {providerStatusLabel(providerStatus.reddit)}
+          </div>
+
+          {/* Error / blocked banners */}
+          {(providerStatus.x === 'blocked' || providerStatus.x === 'quota') && (
+            <div className="w-full flex items-start gap-2 rounded-md border border-destructive/25 bg-destructive/8 px-3 py-2 text-[11px] text-destructive">
+              <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+              <span>
+                <strong>X/Twitter:</strong>{' '}
+                {providerStatus.x === 'quota'
+                  ? 'Scrape.do quota exceeded — upgrade your plan or wait for the limit to reset.'
+                  : 'Traffic blocked by X — login-wall detected. Results use fallback sources.'}
+              </span>
+            </div>
+          )}
+          {(providerStatus.reddit === 'blocked' || providerStatus.reddit === 'quota') && (
+            <div className="w-full flex items-start gap-2 rounded-md border border-destructive/25 bg-destructive/8 px-3 py-2 text-[11px] text-destructive">
+              <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+              <span>
+                <strong>Reddit:</strong>{' '}
+                {providerStatus.reddit === 'quota'
+                  ? 'Scrape.do quota exceeded — upgrade your plan or wait for the limit to reset.'
+                  : 'Traffic blocked by Reddit — bot-check detected. Results use fallback sources.'}
+              </span>
+            </div>
+          )}
+          {(providerStatus.x === 'no_token' && providerStatus.reddit === 'no_token') && (
+            <div className="w-full flex items-start gap-2 rounded-md border border-warning/30 bg-warning/8 px-3 py-2 text-[11px] text-warning-foreground">
+              <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+              <span>
+                <strong>Scrape.do not configured.</strong> Add{' '}
+                <code className="font-mono bg-muted/60 px-1 rounded">VITE_SCRAPE_TOKEN</code> to your{' '}
+                <code className="font-mono bg-muted/60 px-1 rounded">.env</code> to enable live X and Reddit data.
+              </span>
+            </div>
+          )}
       {/* Scrape.do source status bar */}
       {!hasScrapeDoToken ? (
         <div role="alert" className="flex items-center gap-2 px-3 py-2 rounded-md bg-muted/40 border border-border text-[11px] text-muted-foreground">
@@ -675,6 +801,7 @@ const TopicDetail = ({ topic, onClose }: Props) => {
                 {isStreaming && (
                   <span className="inline-flex items-center gap-1 text-[10px] text-primary font-medium bg-primary/10 px-2 py-0.5 rounded-full">
                     <Loader2 className="h-2.5 w-2.5 animate-spin" />
+                    {liveEmotions ? 'Generating summary…' : 'Fetching X, Reddit & News…'}
                     {liveEmotions ? 'Generating summary…' : 'Fetching X, Reddit, YouTube + News…'}
                   </span>
                 )}
@@ -699,6 +826,7 @@ const TopicDetail = ({ topic, onClose }: Props) => {
               ) : (
                 <div className="flex flex-col items-center justify-center py-6 text-center">
                   <Sparkles className="h-6 w-6 text-primary/40 mb-2 animate-pulse" />
+                  <p className="text-xs text-muted-foreground">Fetching live X posts, Reddit discussions &amp; news for <strong>{topic.title}</strong>…</p>
                   <p className="text-xs text-muted-foreground">Fetching live X, Reddit, YouTube &amp; news for <strong>{topic.title}</strong>…</p>
                 </div>
               )}
