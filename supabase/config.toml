@@ -1,0 +1,23 @@
+project_id = "owrqiailcuwlzxeekhms"
+
+[functions.analyze-sentiment]
+verify_jwt = false
+
+[functions.fetch-twitter]
+verify_jwt = false
+
+[functions.fetch-youtube]
+verify_jwt = false
+
+[functions.analyze-topic]
+verify_jwt = false
+
+[functions.scheduled-monitor]
+verify_jwt = false
+
+[functions.generate-insights]
+verify_jwt = false
+
+[auth]
+site_url = "http://localhost:5173"
+email_confirm_by_default = false
