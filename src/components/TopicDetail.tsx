@@ -583,7 +583,7 @@ const TopicDetail = ({ topic, onClose }: Props) => {
 
       {/* Scrape.do source status bar */}
       {!hasScrapeDoToken ? (
-        <div className="flex items-center gap-2 px-3 py-2 rounded-md bg-muted/40 border border-border text-[11px] text-muted-foreground">
+        <div role="alert" className="flex items-center gap-2 px-3 py-2 rounded-md bg-muted/40 border border-border text-[11px] text-muted-foreground">
           <AlertCircle className="h-3.5 w-3.5 shrink-0" />
           <span>
             <strong>VITE_SCRAPE_TOKEN</strong> not set — X and Reddit scraping disabled.

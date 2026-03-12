@@ -54,6 +54,11 @@ describe("decodeEntities", () => {
     expect(decodeEntities("it&#x27;s")).toBe("it's");
     expect(decodeEntities("a&nbsp;b")).toBe("a b");
   });
+
+  it("does not double-decode &amp;lt; — preserves &lt; literal", () => {
+    // &amp;lt; should decode to &lt; (the text), not < (the character)
+    expect(decodeEntities("&amp;lt;")).toBe("&lt;");
+  });
 });
 
 // ── stripTags ────────────────────────────────────────────────────────────────
@@ -114,15 +119,15 @@ describe("parseXHtml", () => {
     expect(parseXHtml(long, "q")).toHaveLength(0);
   });
 
-  it("assigns correct URL containing the query", () => {
+  it("assigns correct URL containing the URL-encoded query", () => {
     const html = `
       <article data-testid="tweet">
         <div data-testid="tweetText">An interesting topic about AI is here.</div>
       </article>
     `;
-    const posts = parseXHtml(html, "AI");
+    const posts = parseXHtml(html, "AI search");
     expect(posts[0].url).toContain("x.com/search");
-    expect(posts[0].url).toContain("AI");
+    expect(posts[0].url).toContain(encodeURIComponent("AI search"));
   });
 });
 
@@ -196,6 +201,28 @@ describe("parseRedditJson", () => {
     };
     const posts = parseRedditJson(data, "my topic");
     expect(posts[0].url).toContain("reddit.com");
+  });
+
+  it("uses current timestamp fallback when created_utc is absent", () => {
+    const before = Date.now();
+    const data = {
+      data: {
+        children: [
+          {
+            data: {
+              id: "z3",
+              title: "Post without timestamp",
+              author: "notime",
+            },
+          },
+        ],
+      },
+    };
+    const posts = parseRedditJson(data, "q");
+    const after = Date.now();
+    const postedMs = new Date(posts[0].postedAt).getTime();
+    expect(postedMs).toBeGreaterThanOrEqual(before);
+    expect(postedMs).toBeLessThanOrEqual(after);
   });
 });
 
