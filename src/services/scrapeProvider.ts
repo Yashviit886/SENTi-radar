@@ -37,6 +37,9 @@ export function providerStatusLabel(s: ProviderStatus['x']): string {
 
 const SCRAPE_DO_BASE = 'https://api.scrape.do';
 
+/** Request timeout in milliseconds for Scrape.do calls (JS rendering can be slow). */
+const SCRAPE_TIMEOUT_MS = 20_000;
+
 function buildScrapeDoUrl(token: string, targetUrl: string): string {
   const params = new URLSearchParams({
     token,
@@ -51,21 +54,34 @@ function buildScrapeDoUrl(token: string, targetUrl: string): string {
 
 // ── HTML text extraction helpers ──────────────────────────────────────────────
 
+/** Decode common HTML entities in a single pass (avoids double-unescaping). */
+function decodeHtmlEntities(text: string): string {
+  return text.replace(/&(?:amp|lt|gt|quot|#39|nbsp);/g, (m) => {
+    switch (m) {
+      case '&amp;':  return '&';
+      case '&lt;':   return '<';
+      case '&gt;':   return '>';
+      case '&quot;': return '"';
+      case '&#39;':  return "'";
+      case '&nbsp;': return ' ';
+      default:       return m;
+    }
+  });
+}
+
 /** Strip all HTML tags and decode common entities. */
 function stripHtml(html: string): string {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-    .replace(/<!--[\s\S]*?-->/g, ' ')
-    .replace(/<[^>]+>/g, ' ')
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, ' ')
-    .replace(/\s{2,}/g, ' ')
-    .trim();
+  return decodeHtmlEntities(
+    html
+      // Remove script/style blocks. Use [^>]* so closing tags with unusual
+      // whitespace (e.g. </script  >) are still matched.
+      .replace(/<script[\s\S]*?<\/script[^>]*>/gi, ' ')
+      .replace(/<style[\s\S]*?<\/style[^>]*>/gi, ' ')
+      .replace(/<!--[\s\S]*?-->/g, ' ')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/\s{2,}/g, ' ')
+      .trim()
+  );
 }
 
 /**
@@ -123,7 +139,7 @@ async function fetchFromX(
   const scrapeUrl = buildScrapeDoUrl(token, xUrl);
 
   try {
-    const res = await fetch(scrapeUrl, { signal: AbortSignal.timeout(20_000) });
+    const res = await fetch(scrapeUrl, { signal: AbortSignal.timeout(SCRAPE_TIMEOUT_MS) });
 
     if (res.status === 402 || res.status === 429) return { posts: [], status: 'quota' };
     if (res.status === 403 || res.status === 407) return { posts: [], status: 'blocked' };
@@ -160,8 +176,7 @@ function parseRedditHtml(html: string): string[] {
   const shredditRe = /post-title="([^"]{20,300})"/gi;
   let match: RegExpExecArray | null;
   while ((match = shredditRe.exec(html)) !== null) {
-    const title = match[1]
-      .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').trim();
+    const title = decodeHtmlEntities(match[1]).trim();
     if (!results.includes(title)) results.push(title);
     if (results.length >= 20) break;
   }
@@ -199,7 +214,7 @@ async function fetchFromReddit(
   const scrapeUrl = buildScrapeDoUrl(token, redditUrl);
 
   try {
-    const res = await fetch(scrapeUrl, { signal: AbortSignal.timeout(20_000) });
+    const res = await fetch(scrapeUrl, { signal: AbortSignal.timeout(SCRAPE_TIMEOUT_MS) });
 
     if (res.status === 402 || res.status === 429) return { posts: [], status: 'quota' };
     if (res.status === 403 || res.status === 407) return { posts: [], status: 'blocked' };
@@ -210,6 +225,8 @@ async function fetchFromReddit(
 
     const html = await res.text();
 
+    // Bot-check heuristics (mirrors the logic in supabase/functions/fetch-reddit/index.ts;
+    // kept separate because this code runs in the browser, not in a Deno edge function).
     if (html.includes('Are you a human?') || (!html.includes('reddit') && html.length < 5000)) {
       return { posts: [], status: 'blocked' };
     }

@@ -21,20 +21,30 @@ function buildScrapeDoUrl(token: string, targetUrl: string): string {
   return `https://api.scrape.do?${params.toString()}`;
 }
 
+function decodeHtmlEntities(text: string): string {
+  return text.replace(/&(?:amp|lt|gt|quot|#39|nbsp);/g, (m) => {
+    switch (m) {
+      case "&amp;":  return "&";
+      case "&lt;":   return "<";
+      case "&gt;":   return ">";
+      case "&quot;": return '"';
+      case "&#39;":  return "'";
+      case "&nbsp;": return " ";
+      default:       return m;
+    }
+  });
+}
+
 function stripHtml(html: string): string {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
-    .replace(/<!--[\s\S]*?-->/g, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, " ")
-    .replace(/\s{2,}/g, " ")
-    .trim();
+  return decodeHtmlEntities(
+    html
+      .replace(/<script[\s\S]*?<\/script[^>]*>/gi, " ")
+      .replace(/<style[\s\S]*?<\/style[^>]*>/gi, " ")
+      .replace(/<!--[\s\S]*?-->/g, " ")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s{2,}/g, " ")
+      .trim()
+  );
 }
 
 function extractSentences(text: string, minLen = 25, maxLen = 320): string[] {
@@ -60,11 +70,7 @@ function parseRedditHtml(html: string): string[] {
   let match: RegExpExecArray | null;
 
   while ((match = shredditRe.exec(html)) !== null) {
-    const title = match[1]
-      .replace(/&amp;/g, "&")
-      .replace(/&lt;/g, "<")
-      .replace(/&gt;/g, ">")
-      .trim();
+    const title = decodeHtmlEntities(match[1]).trim();
     if (!results.includes(title)) results.push(title);
     if (results.length >= 20) break;
   }

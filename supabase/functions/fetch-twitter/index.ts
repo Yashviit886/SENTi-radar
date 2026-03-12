@@ -21,20 +21,30 @@ function buildScrapeDoUrl(token: string, targetUrl: string): string {
   return `https://api.scrape.do?${params.toString()}`;
 }
 
+function decodeHtmlEntities(text: string): string {
+  return text.replace(/&(?:amp|lt|gt|quot|#39|nbsp);/g, (m) => {
+    switch (m) {
+      case "&amp;":  return "&";
+      case "&lt;":   return "<";
+      case "&gt;":   return ">";
+      case "&quot;": return '"';
+      case "&#39;":  return "'";
+      case "&nbsp;": return " ";
+      default:       return m;
+    }
+  });
+}
+
 function stripHtml(html: string): string {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
-    .replace(/<!--[\s\S]*?-->/g, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/&nbsp;/g, " ")
-    .replace(/\s{2,}/g, " ")
-    .trim();
+  return decodeHtmlEntities(
+    html
+      .replace(/<script[\s\S]*?<\/script[^>]*>/gi, " ")
+      .replace(/<style[\s\S]*?<\/style[^>]*>/gi, " ")
+      .replace(/<!--[\s\S]*?-->/g, " ")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/\s{2,}/g, " ")
+      .trim()
+  );
 }
 
 function extractSentences(text: string, minLen = 20, maxLen = 300): string[] {
@@ -109,7 +119,7 @@ serve(async (req) => {
       platform: string;
     }> = [];
     let sourceInfo = "";
-    let scrapeStatus: "ok" | "blocked" | "quota" | "no_token" | "error" | "fallback" = "fallback";
+    let scrapeStatus: "ok" | "blocked" | "quota" | "no_token" | "error" | "idle" = "idle";
 
     // ── Step 1: Scrape X via Scrape.do ────────────────────────────────────────
     if (SCRAPE_DO_TOKEN) {
@@ -129,7 +139,7 @@ serve(async (req) => {
         } else if (res.ok) {
           const html = await res.text();
           const isLoginWall =
-            html.includes("Log in to X") && !html.includes('data-testid="tweet"');
+            html.toLowerCase().includes("log in to x") && !html.includes('data-testid="tweet"');
 
           if (!isLoginWall) {
             const sentences = parseXHtml(html);

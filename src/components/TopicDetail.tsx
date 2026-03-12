@@ -22,8 +22,13 @@ interface Props {
   onClose: () => void;
 }
 
-// Keys are read from .env (never hardcoded). VITE_SCRAPE_TOKEN is embedded in
-// the client bundle — see README for caveats on key exposure.
+// ─────────────────────────────────────────────────────────────────────────────
+// SECURITY NOTE: VITE_ prefixed variables are embedded in the client-side JS
+// bundle and visible to anyone who inspects the page source.  For a production
+// deployment, consider moving all Scrape.do calls to Supabase Edge Functions and
+// removing VITE_SCRAPE_TOKEN from the frontend entirely (use SCRAPE_DO_TOKEN as
+// a Supabase secret instead).  See README for step-by-step instructions.
+// ─────────────────────────────────────────────────────────────────────────────
 const SCRAPE_TOKEN = import.meta.env.VITE_SCRAPE_TOKEN || '';
 const YOUTUBE_KEY = import.meta.env.VITE_YOUTUBE_API_KEY || '';
 
