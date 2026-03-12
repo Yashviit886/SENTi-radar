@@ -16,6 +16,8 @@ serve(async (req) => {
     const GEMINI_API_KEY = Deno.env.get("GEMINI_API_KEY") || "";
 
     const isChat = messages && messages.length > 0;
+    const topEmotion = emotions?.[0];
+    const secondEmotion = emotions?.[1];
 
     const systemPrompt = isChat
       ? `You are an AI analyzing public sentiment data. 
@@ -26,37 +28,50 @@ Crisis Level: ${crisisLevel || 'none'}
 Top Emotions: ${emotions?.map((e: any) => `${e.emotion}: ${e.percentage}%`).join(', ') || 'Not analyzed'}
 
 Answer the user's questions in an extremely concise manner. Provide ONLY the direct answer to what is exactly asked. Do not add any polishing, pleasantries, formatting flair, or extra information. Just direct, raw answers.`
-      : `You are a senior PR and communications strategist. Analyze the following public sentiment data and provide balanced, actionable recommendations.
+      : `You are a senior PR and communications strategist. Analyze the following public sentiment data and produce a structured, evidence-based strategic report.
 
-Topic: ${topic?.title || 'General sentiment analysis'}
-Hashtag: ${topic?.hashtag || 'N/A'}
-Overall Sentiment: ${sentiment || 'mixed'}
-Crisis Level: ${crisisLevel || 'none'}
-Emotion Breakdown: ${emotions?.map((e: any) => `${e.emotion}: ${e.percentage}%`).join(', ') || 'Not analyzed'}
-Volume Change: ${topic?.change ? `${topic.change > 0 ? '+' : ''}${topic.change}%` : 'N/A'}
+## Data Snapshot
+- **Topic**: ${topic?.title || 'General sentiment analysis'}
+- **Hashtag**: ${topic?.hashtag || 'N/A'}
+- **Overall Sentiment**: ${sentiment || 'mixed'}
+- **Crisis Level**: ${crisisLevel || 'none'}
+- **Top Emotion**: ${topEmotion ? `${topEmotion.emotion} (${topEmotion.percentage}%)` : 'N/A'}
+- **Secondary Emotion**: ${secondEmotion ? `${secondEmotion.emotion} (${secondEmotion.percentage}%)` : 'N/A'}
+- **Full Emotion Breakdown**: ${emotions?.map((e: any) => `${e.emotion}: ${e.percentage}%`).join(', ') || 'Not analyzed'}
+- **Volume Change**: ${topic?.change ? `${topic.change > 0 ? '+' : ''}${topic.change}%` : 'N/A'}
 
-Generate a professional analysis report with the following sections:
+Reference these metrics explicitly when justifying recommendations.
+
+Generate a professional analysis report with EXACTLY these sections:
 
 ## Situation Assessment
-Brief overview of the current public sentiment landscape (2-3 sentences).
+2-3 sentence overview of the current public sentiment landscape. Cite the specific emotion percentages and crisis level.
 
 ## Key Concerns Identified
-- Bullet points of main issues driving sentiment (3-4 points)
+- 3-4 bullet points of main issues driving sentiment. Each bullet must reference a specific data point.
 
 ## Recommended Actions
-Provide 4-5 balanced, actionable recommendations. Each should:
-- Start with a clear action verb
-- Be specific and implementable
-- Consider both immediate and long-term impact
-- Not be one-sided or dismissive of public concerns
+Generate 5 actionable recommendations. Each MUST follow this exact structure:
+
+**Action**: [Clear action verb + specific task]
+**Owner**: [Team/role responsible — e.g., PR team, Product, Support, Marketing]
+**Effort**: [S/M/L — Small: <4h, Medium: 1-3 days, Large: 1+ weeks]
+**Impact**: [Expected measurable outcome with a KPI]
+**Evidence**: [Reference the specific data point — e.g., "45% anger + high crisis level"]
+**Timeline**: [Immediate (24-48h) / Short-term (1-2 weeks) / Long-term (30-90d)]
+**Priority Score (RICE)**: [Number 1-10, higher = more urgent]
 
 ## Opportunities
-- 2-3 potential opportunities that could arise from this situation
+- 2-3 strategic opportunities from this situation, specific to the data.
 
 ## Risk Factors to Monitor
-- 2-3 things to watch that could escalate or change the situation
+- 2-3 specific escalation risks tied to the data points above.
 
-Keep the tone professional, balanced, and constructive. Avoid corporate jargon.`;
+RULES:
+- Never use vague phrases like "consider", "think about", "look into", "keep an eye", or "be aware"
+- Every recommendation must have a specific owner and measurable KPI
+- Evidence field must cite actual numbers from the Data Snapshot
+- Keep tone professional, balanced, and constructive`;
 
     const PARALLEL_API_KEY = Deno.env.get("PARALLEL_API_KEY") || "";
 
