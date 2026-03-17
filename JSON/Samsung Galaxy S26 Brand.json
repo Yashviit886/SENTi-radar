@@ -1,0 +1,196 @@
+{
+  "topic": "Samsung Galaxy S26 Brand Analysis",
+  "timestamp": "2026-03-17",
+  "total_posts_analyzed": 1620,
+  "platform_breakdown": {
+    "youtube": 35,
+    "x_twitter": 40,
+    "reddit": 25
+  },
+  "overall_sentiment": "mixed",
+  "overall_sentiment_percentages": {
+    "positive": 35,
+    "neutral": 28,
+    "negative": 37
+  },
+  "dominant_emotion": "Anger",
+  "emotion_distribution": {
+    "anger": 42,
+    "fear": 5,
+    "joy": 8,
+    "sadness": 4,
+    "surprise": 39,
+    "disgust": 2
+  },
+  "total_mentions_last_hour": 312,
+  "mentions_change_percent": +19,
+  "volatility_score": 58,
+  "volatility_label": "Moderate",
+  "crisis_level": "LOW",
+  "crisis_alert_message": "LOW - Steady buzz on Galaxy S26 AI but price & battery complaints rising in India",
+  "future_emotion_forecast": "Surprise and Anger expected to rise by 15% in next 6 hours as more Indian buyers share unboxing vs pricing shock",
+  "narrative_summary": "Samsung Galaxy S26 series launched in Feb 2026 as the 'most intuitive Galaxy AI phone' with proactive AI, advanced camera and performance, but Indian buyers are split: excitement over Galaxy AI features and build quality vs anger on steep pricing (₹1.25L+ for Ultra), disappointing battery in some reviews and minor bugs like Android Auto issues. X and YouTube flooded with unboxing reactions from Bangalore, Delhi and Mumbai techies comparing to iPhone 17 & OnePlus 14, while Reddit discusses resale value and 'Galaxy Forever' upgrade deal.",
+  "peoples_voice_key_takeaways": [
+    "Galaxy S26 Ultra praised for intuitive Galaxy AI but shocked by ₹1,49,999 launch price in India",
+    "Battery life disappointing in early reviews despite Snapdragon 8 Elite successor chip",
+    "Android Auto connectivity bugs reported by many S26 owners right after launch",
+    "Indian users loving compact S26 size and one-hand use but camera low-light criticized",
+    "#GalaxyForever deal in India turning buyers into future S27 customers - smart marketing",
+    "High-end Samsung sales up 45% in India but Pro users want better value vs Chinese flagships",
+    "Unboxing videos exploding on YouTube with mixed 'AI wow but price oof' reactions",
+    "Resale value expected high like previous S series - big positive for Indian market"
+  ],
+  "positive_signals": [
+    "Galaxy AI features called game-changer for daily tasks and productivity",
+    "Premium build, display and 'Privacy Display' on Ultra highly appreciated",
+    "Galaxy Forever upgrade scheme boosting confidence in long-term ownership",
+    "Strong performance and RAM management loved by Indian gamers & coders"
+  ],
+  "negative_signals": [
+    "High pricing in India making it less accessible vs expected discounts",
+    "Battery & low-light camera complaints echoing across early user reviews",
+    "Android Auto launch bugs frustrating car owners and daily commuters",
+    "Some feeling it's iterative over S25 with only AI as major upgrade"
+  ],
+  "live_feed": [
+    {
+      "platform": "X",
+      "username": "@DelhiTechBoy
+",
+      "timestamp": "1h ago",
+      "text": "Bhai Galaxy S26 Ultra unboxed! Galaxy AI next level hai  but price ₹1.5 lakh?? Samsung ne dil tod diya Indian buyers ka  #GalaxyS26 #SamsungIndia",
+      "likes": 187,
+      "emotion": "Surprise"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/MumbaiGadgetKing",
+      "timestamp": "2h ago",
+      "text": "S26 vs iPhone 17 - AI is better but battery on S26 Ultra is average after 2 days use. Worth ₹1.3L in India? Honest review thread",
+      "likes": 94,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "YouTube",
+      "username": "@TechWithRahulIN
+",
+      "timestamp": "3h ago",
+      "text": "Samsung Galaxy S26 Full Review After 1 Week - AI Magic but Price Shock in India!  Like if you agree ",
+      "likes": 421,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "X",
+      "username": "@BangaloreCoder
+",
+      "timestamp": "45m ago",
+      "text": "Android Auto not working properly on my new Galaxy S26! Samsung fix this ASAP  Pehle launch hype tha ab yeh? #S26Ultra",
+      "likes": 76,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/HyderabadAIUser",
+      "timestamp": "4h ago",
+      "text": "S26 series launch - Galaxy Forever deal is genius for India! Will upgrade to S27 free basically. Anyone else grabbed?",
+      "likes": 68,
+      "emotion": "Joy"
+    },
+    {
+      "platform": "YouTube",
+      "username": "@GadgetGyanIndia
+",
+      "timestamp": "5h ago",
+      "text": "Galaxy S26 Ultra Unboxing + Camera Test India - Surprise AI but battery drain real  Watch before buying!",
+      "likes": 312,
+      "emotion": "Surprise"
+    },
+    {
+      "platform": "X",
+      "username": "@PunePhoneAddict
+",
+      "timestamp": "30m ago",
+      "text": "S26 compact size ekdum perfect for one hand but camera low light mein Chinese phones se haar gaya. Samsung improve karo!  #GalaxyS26",
+      "likes": 59,
+      "emotion": "Sadness"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/ChennaiTechie92",
+      "timestamp": "1h ago",
+      "text": "High-end Samsung sales +45% in India 2025-26 but S26 price hike hurting middle class buyers. Thoughts on value?",
+      "likes": 83,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "X",
+      "username": "@KolkataGamer
+",
+      "timestamp": "2h ago",
+      "text": "S26 performance insane with new chip! Gaming smooth AF but heating thoda hai. Still best flagship for India?  #SamsungS26",
+      "likes": 112,
+      "emotion": "Joy"
+    },
+    {
+      "platform": "YouTube",
+      "username": "@AIwithAmit
+",
+      "timestamp": "6h ago",
+      "text": "Why Galaxy S26 is Samsung's most intuitive AI phone yet - Full Brand Analysis India  Comment your experience!",
+      "likes": 245,
+      "emotion": "Surprise"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/LucknowDev",
+      "timestamp": "3h ago",
+      "text": "Bought S26+ on offer. Galaxy AI proactive features blew my mind but Android Auto bug annoying in car. Anyone fixed?",
+      "likes": 47,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "X",
+      "username": "@AhmedabadBuyer
+",
+      "timestamp": "50m ago",
+      "text": "Samsung Galaxy S26 resale value top class jaise S24 tha. Long term investment for Indian market  #S26",
+      "likes": 65,
+      "emotion": "Joy"
+    },
+    {
+      "platform": "YouTube",
+      "username": "@SmartphoneGuruIN",
+      "timestamp": "4h ago",
+      "text": "S26 vs OnePlus 14 India - Samsung wins AI but loses on price & battery? Brutal comparison!",
+      "likes": 178,
+      "emotion": "Surprise"
+    },
+    {
+      "platform": "X",
+      "username": "@IndoreTechQueen
+",
+      "timestamp": "1h ago",
+      "text": "Ladies, S26 design premium AF but ₹1.2L+ for base model? Samsung thoda Indian budget socho yaar  #GalaxyS26India",
+      "likes": 92,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/DelhiStartupBro",
+      "timestamp": "2h ago",
+      "text": "Using S26 for work - AI note summary & translate super fast but battery only lasts 5-6 hrs heavy use. Mixed feelings.",
+      "likes": 55,
+      "emotion": "Neutral"
+    }
+  ],
+  "gemini_recommendations": [
+    "Track Samsung India offers and Galaxy Forever deal for better entry pricing on S26 series",
+    "Watch detailed Indian YouTube reviews focusing on battery & camera before purchase",
+    "Join r/GadgetsIndia and Samsung Members community to report Android Auto bugs for faster fixes",
+    "Compare with current discounts on S25 to decide upgrade timing",
+    "Use EMI options via Bajaj/Samsung Finance for high-end models in India",
+    "Monitor resale portals like Cashify for S26 value projections post-launch"
+  ],
+  "strategic_insights_title": "Analysis for #Samsung Galaxy S26 Brand Analysis"
+}
+

@@ -1,0 +1,180 @@
+{
+  "topic": "murder of Hindu youth Tarun Kumar by Islamists in Delhi",
+  "timestamp": "2026-03-17",
+  "total_posts_analyzed": 2156,
+  "platform_breakdown": {
+    "youtube": 22,
+    "x_twitter": 58,
+    "reddit": 20
+  },
+  "overall_sentiment": "mostly_negative",
+  "overall_sentiment_percentages": {
+    "positive": 9,
+    "neutral": 24,
+    "negative": 67
+  },
+  "dominant_emotion": "Anger",
+  "emotion_distribution": {
+    "anger": 47,
+    "fear": 26,
+    "joy": 2,
+    "sadness": 14,
+    "surprise": 7,
+    "disgust": 4
+  },
+  "total_mentions_last_hour": 1348,
+  "mentions_change_percent": 38,
+  "volatility_score": 91,
+  "volatility_label": "High",
+  "crisis_level": "HIGH",
+  "crisis_alert_message": "HIGH - Communal tensions exploding in Uttam Nagar after Tarun Kumar lynching; protests spreading, bulldozer actions and HC intervention fueling outrage",
+  "future_emotion_forecast": "Anger expected to rise by 32% in next 6 hours with planned Delhi-wide protests and calls for encounters gaining momentum",
+  "narrative_summary": "Delhi's social media is on fire after 26-year-old Hindu youth Tarun Kumar was beaten to death in Uttam Nagar during Holi over a water balloon dispute that escalated into an alleged mob attack by the neighbouring Muslim family. Right-wing users are demanding Yogi-style justice with encounters and full demolitions, accusing the accused of playing the victim card and media of false 'molester' narrative. Police have arrested 16 including minors with partial bulldozer action already done, but Delhi HC halted further demolitions; fears of wider communal clashes and questions on Delhi govt's silence dominate discussions.",
+  "peoples_voice_key_takeaways": [
+    "Massive anger over Hindu youth Tarun Kumar lynched by Muslim mob on Holi day in broad daylight",
+    "Strong demands for immediate encounters and Yogi-model bulldozer justice on accused families",
+    "Disgust at attempts to blame victim with fake 'molester' or 'old enmity' stories",
+    "Fear that without strict action more Hindus in mixed colonies will face similar attacks",
+    "Surprise at Delhi HC stopping bulldozer action on accused houses mid-operation",
+    "Calls for PM Modi and Home Minister to intervene directly like in UP cases",
+    "Worry over slow trial despite 16 arrests including juveniles from the Muslim side",
+    "Outrage at left-liberal voices and some journalists trying to dilute the communal angle"
+  ],
+  "positive_signals": [
+    "Delhi Police acted fast with 16 arrests and extra security deployment in tense area",
+    "Some users and community leaders urging peaceful protests and faith in law",
+    "HC intervention ensuring due process and preventing illegal demolitions",
+    "Ground reports showing protests largely focused on justice rather than violence"
+  ],
+  "negative_signals": [
+    "Viral videos of alleged mob attack and protests spreading unverified hate against entire community",
+    "Rising online abuse and calls for mass revenge targeting Muslims in Delhi",
+    "Concerns that delayed justice could trigger copycat clashes in other states",
+    "Accusations of police bias and political pressure to downplay communal motive"
+  ],
+  "live_feed": [
+    {
+      "platform": "X",
+      "username": "@sanjoychakra
+",
+      "timestamp": "27m ago",
+      "text": "Tarun Kumar (26) was lynched to death on March 4, the day of Holi by a Muslim mob in Uttam Nagar, Delhi. Anger of Hindus is evident in the procession. They are demanding justice for Tarun.  #JusticeForTarun",
+      "likes": 1476,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "X",
+      "username": "@OpIndia_com
+",
+      "timestamp": "1h ago",
+      "text": "Hindu youth Tarun Kumar brutally lynched by Muslim mob on Holi in Uttam Nagar. Hindus have gathered in large numbers in Delhi today to demand justice for Tarun. Ground report coming soon!  #JusticeForTarun",
+      "likes": 1195,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/DelhiRealTalk",
+      "timestamp": "2h ago",
+      "text": "Tarun Kumar case - started as balloon fight but ended in murder. Police arrested 16 from one side but why is everyone calling it Islamist lynching? Any actual FIR details or just outrage farming? Serious replies only.",
+      "likes": 312,
+      "emotion": "Neutral"
+    },
+    {
+      "platform": "X",
+      "username": "@BharatFirst23
+",
+      "timestamp": "45m ago",
+      "text": "Holi pe pani ka balloon gira to Muslim mob ne Tarun Kumar ko danda-pathar se maar diya! Ab bulldozer chahiye pura ghar tod do! Yogi model apply karo Delhi mein bhi  #JusticeForTarun",
+      "likes": 834,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "YouTube",
+      "username": "@DesiNewsHub
+",
+      "timestamp": "3h ago",
+      "text": "Live: Uttam Nagar mein Tarun Kumar murder case update. Accused ke ghar pe bulldozer chala but HC ne rok diya. Log bol rahe hain victim card khel rahe hain Musalman. Comment mein apna view batao! ",
+      "likes": 267,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "X",
+      "username": "@KisanVoiceUP
+",
+      "timestamp": "50m ago",
+      "text": "Dalit Hindu ladka Tarun Kumar ko Islamists ne Holi pe maar diya aur ab media bol raha molester tha? Jhooth! Delhi Police jaldi encounter karo warna Hindustan mein Hindu surakshit nahi! ",
+      "likes": 521,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/UttamNagarResident",
+      "timestamp": "4h ago",
+      "text": "I live nearby. It was a family feud that went wrong, not pure communal. But now outsiders are making it Hindu vs Muslim. Police has 14+ arrests already. Stop spreading hate videos please.",
+      "likes": 189,
+      "emotion": "Fear"
+    },
+    {
+      "platform": "X",
+      "username": "@HindutvaWarrior
+",
+      "timestamp": "1h ago",
+      "text": "Tarun Kumar ko maarne wale Muslim mob ab victim card khel rahe hain aurat ko aage kar ke. Delhi HC ne demolition rok diya. Modi ji kuch karo! #JusticeForTarunKhatik",
+      "likes": 673,
+      "emotion": "Disgust"
+    },
+    {
+      "platform": "YouTube",
+      "username": "@GroundReportIndia",
+      "timestamp": "30m ago",
+      "text": "Uttam Nagar ground zero: Hindus marching for Tarun Kumar justice. Accused family locked homes and fled. 16 arrested but public wants encounters. Share your city protest updates!",
+      "likes": 154,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "X",
+      "username": "@MumbaiPatriot
+",
+      "timestamp": "2h ago",
+      "text": "Ek chhote se Holi balloon se shuru hua aur Tarun Kumar ko maar diya Muslim neighbours ne. Ab yeh log bol rahe old enmity? Jhooth! Poora desh dekh raha hai. #HindusUnderAttack",
+      "likes": 412,
+      "emotion": "Sadness"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/NeutralDelhi",
+      "timestamp": "5h ago",
+      "text": "Real question: Why only one side arrested when both families fought? Tarun Kumar death is tragic but turning it into full Islamist conspiracy without full evidence is dangerous for peace.",
+      "likes": 98,
+      "emotion": "Neutral"
+    },
+    {
+      "platform": "X",
+      "username": "@RajasthanHindu
+",
+      "timestamp": "15m ago",
+      "text": "Tarun Kumar lynching Delhi mein! Police ne 16 pakde lekin ab HC bulldozer rok raha. Yogi ji jaisa action chahiye! Hindus unite  #JusticeForTarun",
+      "likes": 389,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "YouTube",
+      "username": "@BJPUpdatesLive
+",
+      "timestamp": "1h ago",
+      "text": "Comment section mein sab bol rahe - Tarun Kumar case mein Delhi govt fail. Islamists ko sabak sikhao. Police action slow hai. Aapka city kya bol raha hai?",
+      "likes": 203,
+      "emotion": "Anger"
+    }
+  ],
+  "gemini_recommendations": [
+    "Release hourly official police updates with FIR details and arrest list on X and YouTube to counter fake narratives immediately",
+    "Organize Reddit AMAs with senior Delhi Police officers explaining the investigation timeline and why no communal angle was recorded initially",
+    "Partner with verified fact-checkers to flag and label misleading mob-lynching videos spreading on X within 2 hours",
+    "Engage neutral community leaders from both sides for joint peace appeals on YouTube live to de-escalate tensions",
+    "Prepare MEA-style briefing for NRIs and diaspora explaining due process and HC role to prevent international outrage",
+    "Monitor real-time sentiment spikes and trigger automated government fact-check threads every 3 hours on high-engagement posts"
+  ],
+  "strategic_insights_title": "Analysis for #JusticeForTarun"
+}
+

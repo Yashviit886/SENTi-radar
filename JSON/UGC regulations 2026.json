@@ -1,0 +1,194 @@
+{
+  "topic": "UGC Regulations 2026",
+  "timestamp": "2026-03-17",
+  "total_posts_analyzed": 1876,
+  "platform_breakdown": {
+    "youtube": 28,
+    "x_twitter": 52,
+    "reddit": 20
+  },
+  "overall_sentiment": "mixed",
+  "overall_sentiment_percentages": {
+    "positive": 24,
+    "neutral": 31,
+    "negative": 45
+  },
+  "dominant_emotion": "Anger",
+  "emotion_distribution": {
+    "anger": 42,
+    "fear": 28,
+    "joy": 7,
+    "sadness": 13,
+    "surprise": 6,
+    "disgust": 4
+  },
+  "total_mentions_last_hour": 682,
+  "mentions_change_percent": 22,
+  "volatility_score": 83,
+  "volatility_label": "High",
+  "crisis_level": "HIGH",
+  "crisis_alert_message": "HIGH - Elevated concern detected: Supreme Court stay on UGC Equity Regulations triggers nationwide caste-polarized protests and demands for rollback or stronger enforcement",
+  "future_emotion_forecast": "Anger and Fear expected to surge by 25% in next 6 hours ahead of March 19 Supreme Court hearing and planned Rajbhawan marches",
+  "narrative_summary": "The UGC (Promotion of Equity in Higher Education Institutions) Regulations 2026, notified on January 13 to curb caste-based discrimination through mandatory Equal Opportunity Centres and stricter penalties, remain stayed by the Supreme Court since January 29 following massive backlash from upper-caste groups alleging reverse discrimination against general category students. Marginalized communities (SC/ST/OBC) are protesting for immediate rollout citing ongoing campus harassment and suicides like Rohith Vemula's case, while savarna-led demonstrations in Delhi, Ranchi, Bihar and Maharashtra demand full rollback. Social media reflects deep societal divide with hashtags #UGCRollback and #UGCEquity2026 trending amid political accusations against the government ahead of key state polls.",
+  "peoples_voice_key_takeaways": [
+    "Upper-caste groups claim regulations are one-sided and prone to misuse against general category students, demanding immediate rollback",
+    "SC/ST/OBC students and unions highlight persistent caste harassment on campuses and demand Rohith Vemula Act alongside UGC enforcement",
+    "Supreme Court stay on January 29 praised by protesters as 'saving merit' but slammed by activists as delaying justice for Dalit students",
+    "Protests turning violent in Delhi University and Ranchi with effigy burning and police clashes, raising fears of further campus unrest",
+    "BJP and RSS accused of double standards – first notifying rules then staying silent during savarna backlash ahead of UP polls",
+    "Students demand revival of student unions and Equity Committees with proper representation from all groups",
+    "OBC communities in Maharashtra seeking amendments rather than full rollback to balance protections",
+    "Calls for UGC to release compliance data portal immediately to build transparency"
+  ],
+  "positive_signals": [
+    "Strong support from student Islamic and Dalit organisations for equity ambassadors and time-bound complaint resolution",
+    "Some HEIs already forming Equal Opportunity Centres voluntarily, showing potential for inclusive campus culture",
+    "Increased national debate pushing for broader anti-discrimination laws beyond caste",
+    "Supreme Court intervention seen as opportunity for balanced, misuse-proof regulations"
+  ],
+  "negative_signals": [
+    "Rising caste polarisation with savarna vs Dalit protests risking law and order breakdown in multiple states",
+    "Fear of academic disruption as universities delay policy implementation due to legal uncertainty",
+    "Allegations of political misuse of SC/ST Act amplified alongside UGC debate, deepening societal distrust",
+    "Student suicides and mental health crisis reports surging on social media amid unresolved discrimination complaints"
+  ],
+  "live_feed": [
+    {
+      "platform": "X",
+      "username": "@DalitVoice_IN
+",
+      "timestamp": "1h ago",
+      "text": "UGC Equity Regulations 2026 को SC ने stay कर दिया लेकिन हम रुकेंगे नहीं! Rohith Vemula की आत्मा चिल्ला रही है। Equal Opportunity Centre हर कॉलेज में बनाओ वरना आंदोलन तेज होगा!  #UGCEquity2026 #JusticeForSCST",
+      "likes": 1247,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "X",
+      "username": "@GeneralCategoryNow",
+      "timestamp": "2h ago",
+      "text": "Supreme Court ne UGC Regulations 2026 ko stay kiya – sahi kiya! General category ko target karke kya equity? Merit ko bachao! #UGCRollback #SaveGeneralCategory ",
+      "likes": 893,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/ConcernedDUStudent",
+      "timestamp": "45m ago",
+      "text": "Anyone else following the UGC 2026 mess? My college is scared to form Equity Committees because of potential misuse. SC stay was a relief but Dalit groups are protesting again. This is dividing campuses badly.",
+      "likes": 156,
+      "emotion": "Fear"
+    },
+    {
+      "platform": "X",
+      "username": "@AISA_CUJ
+",
+      "timestamp": "3h ago",
+      "text": "राजभवन मार्च की तैयारी पूरी! UGC Equity Regulations 2026 लागू कराओ। Dalit students की सुरक्षा पहले! पोस्टर और तख्तियां तैयार। 17 मार्च को Ranchi University से निकलेंगे। #यूजीसी_समता_विनियम_2026",
+      "likes": 312,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "YouTube",
+      "username": "ThePrintIndia",
+      "timestamp": "4h ago",
+      "text": "Comment: Supreme Court stay on UGC 2026 is temporary relief but caste discrimination is real. Need Rohith Vemula Act now! Government must listen to both sides before it escalates. (from live explainer video)",
+      "likes": 421,
+      "emotion": "Sadness"
+    },
+    {
+      "platform": "X",
+      "username": "@ThusSpokeDharma
+",
+      "timestamp": "2h ago",
+      "text": "19 मार्च को decisive hearing है UGC Regulations Act 2026 की। General category बचाओ, rollback हो! Modi govt ने पहले notify क्यों किया? अब damage control मत करो। #UGC2026",
+      "likes": 678,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/BiharStudentUnion",
+      "timestamp": "1h ago",
+      "text": "Effigy burning in Arrah against UGC Equity Rules – upper castes say it's anti-merit. But SC/ST friends in my college face daily exclusion. This stay has made things worse. Need dialogue fast.",
+      "likes": 89,
+      "emotion": "Fear"
+    },
+    {
+      "platform": "X",
+      "username": "@Maahibahubali
+",
+      "timestamp": "5h ago",
+      "text": "BJP ने UGC Regulations 2026 notify कर सवर्णों को धोखा दिया। House arrest तक हो गया Delhi में। अब Yogi ji rollback करो! SC/ST Act भी misuse हो रहा। #StopPersecutionOfUpperCaste",
+      "likes": 534,
+      "emotion": "Disgust"
+    },
+    {
+      "platform": "YouTube",
+      "username": "NDTVIndia",
+      "timestamp": "3h ago",
+      "text": "Comment: UGC 2026 rules were needed but poorly drafted. Only SC/ST focus without general category safeguard = problem. SC did right. Hope balanced version comes soon. (under news clip)",
+      "likes": 267,
+      "emotion": "Surprise"
+    },
+    {
+      "platform": "X",
+      "username": "@SIO_India
+",
+      "timestamp": "50m ago",
+      "text": "Stay on UGC Equity Regulations 2026 is regressive! Marginalised students continue to suffer. Demand Rohith Vemula Act + student union elections immediately. #PromoteEquity",
+      "likes": 415,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/MaharashtraOBCForum",
+      "timestamp": "2h ago",
+      "text": "OBC groups in Maharashtra want amendments in UGC 2026 not full rollback. We support equity but rules must include safeguards for all. Protests should not turn violent.",
+      "likes": 112,
+      "emotion": "Neutral"
+    },
+    {
+      "platform": "X",
+      "username": "@Vishnu_Jain1
+",
+      "timestamp": "4h ago",
+      "text": "SC ने कहा Regulation 3C discriminatory है। UGC 2026 में general category की सुरक्षा क्यों नहीं? 19 मार्च को सुनवाई – rollback की उम्मीद! #UGCEquityRegulations",
+      "likes": 1245,
+      "emotion": "Joy"
+    },
+    {
+      "platform": "YouTube",
+      "username": "WION",
+      "timestamp": "1h ago",
+      "text": "Comment: This UGC controversy is BJP's own creation. First notified anti-caste rules, now upper castes protesting. RSS Sant Ravidas campaign won't hide the divide. India needs real equity. ",
+      "likes": 198,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "X",
+      "username": "@HiddenColonial
+",
+      "timestamp": "30m ago",
+      "text": "Maharashtra OBCs raising voice for changes in UGC Equity Regulations 2026. Not rollback but amendments needed. Caste politics destroying education. #UGC2026",
+      "likes": 76,
+      "emotion": "Fear"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/DU_ProfessorAnon",
+      "timestamp": "2h ago",
+      "text": "As a prof, I see both sides. Caste discrimination exists but new UGC rules were too sweeping without checks. SC stay is wise – let us wait for proper hearing before campuses burn.",
+      "likes": 203,
+      "emotion": "Neutral"
+    }
+  ],
+  "gemini_recommendations": [
+    "Immediately convene all-party and stakeholder consultations including SC/ST, OBC, general category student unions and UGC officials to draft balanced amendments before March 19 hearing",
+    "Direct all HEIs to proactively establish voluntary Equal Opportunity Centres and publish monthly discrimination complaint reports for transparency",
+    "Launch nationwide awareness campaigns on existing 2012 regulations while Supreme Court reviews, focusing on mental health support for affected students",
+    "Strengthen UGC compliance portal with real-time tracking and penalties only after due process to prevent misuse fears",
+    "Engage RSS and opposition leaders for dialogue on broader anti-discrimination framework including Rohith Vemula Act elements",
+    "Monitor social media volatility in real-time and issue calming advisories to prevent escalation into larger law-and-order issues during protests"
+  ],
+  "strategic_insights_title": "Analysis for #UGC Regulations 2026"
+}
+

@@ -1,0 +1,193 @@
+{
+  "topic": "LPG Shortage India Crisis 2026",
+  "timestamp": "2026-03-17",
+  "total_posts_analyzed": 2341,
+  "platform_breakdown": {
+    "youtube": 22,
+    "x_twitter": 58,
+    "reddit": 20
+  },
+  "overall_sentiment": "mostly_negative",
+  "overall_sentiment_percentages": {
+    "positive": 15,
+    "neutral": 22,
+    "negative": 63
+  },
+  "dominant_emotion": "Anger",
+  "emotion_distribution": {
+    "anger": 48,
+    "fear": 32,
+    "joy": 3,
+    "sadness": 10,
+    "surprise": 4,
+    "disgust": 3
+  },
+  "total_mentions_last_hour": 1245,
+  "mentions_change_percent": 45,
+  "volatility_score": 95,
+  "volatility_label": "High",
+  "crisis_level": "HIGH",
+  "crisis_alert_message": "HIGH - Severe LPG cylinder shortage crisis escalates: College messes forced to shut down across UP, Bihar, Delhi & Maharashtra, student bandhs spreading, commercial LPG prices hiked 25-30%, black-marketing rampant",
+  "future_emotion_forecast": "Anger and Fear expected to surge by 35% in next 6 hours as more universities announce indefinite bandhs and reports of PMO emergency meeting leak on social media",
+  "narrative_summary": "India is facing its worst LPG shortage in a decade in March 2026 after delayed Russian and Middle-East imports, refinery maintenance shutdowns and sudden spike in domestic + commercial demand. College hostels and messes in over 150 universities (BHU, DU, AMU, Pune University, Patna University etc.) have run out of cylinders completely – many messes closed for 3-4 days forcing students to survive on maggi, biscuits or expensive outside food. This triggered massive student bandhs, road blockades and clashes with police in Lucknow, Patna, Delhi and Mumbai. Simultaneously, commercial LPG cylinders (used by hotels, dhabas, street vendors) prices jumped from ₹1800 to ₹2400+ in open market with black-marketing at ₹3000+. Middle-class households and PG students are worst hit while opposition parties blame Centre for poor planning ahead of Holi and summer demand. Hashtags #LPGShortageIndia, #MessBandh and #LPGPriceHike are trending with millions of views on protest videos.",
+  "peoples_voice_key_takeaways": [
+    "College messes in BHU, DU, Allahabad University completely shut since 5 days – students eating only biscuits and bread, demanding free emergency cylinders from state govts",
+    "Commercial LPG price hike of 25-30% has destroyed small eateries and dhabas – many closing down, vendors protesting in UP and Bihar",
+    "Black-marketing rampant in Delhi, Mumbai and Lucknow – cylinders sold at ₹2800-3500 while official rate is ₹1800, police silent",
+    "Student unions calling indefinite bandhs till LPG supply restored – clashes with police in Patna University and Pune campus",
+    "Women PG students and girls hostels worst affected – fear of safety while going out for food, many returning to villages",
+    "Opposition (Congress, RJD, AAP) accusing Modi govt of favouring Adani-Ambani refineries while ignoring public distress",
+    "Oil Ministry claims 'temporary logistics issue' but no timeline given – public demanding immediate import orders and subsidy restoration",
+    "Rural areas and small towns reporting zero supply for 10+ days, forcing families to use wood/coal chulhas again"
+  ],
+  "positive_signals": [
+    "Some state governments (Maharashtra, Kerala) started distributing emergency 5kg cylinders to colleges from reserve stocks",
+    "HPCL and IOCL announced special night-shift refilling at few depots in Delhi-NCR and Mumbai",
+    "NGOs and student groups organising community kitchens in affected campuses using electric induction where power available",
+    "Supreme Court mentioned the crisis in ongoing PIL – possibility of judicial intervention for priority supply"
+  ],
+  "negative_signals": [
+    "Widespread protests turning violent with stone pelting and lathi-charge in Lucknow University and Patna – several students injured",
+    "Health risks rising – students and families using kerosene and cow-dung cakes leading to respiratory issues reported in hospitals",
+    "Economic loss mounting – small restaurants and street vendors shutting shops, daily wage workers losing income",
+    "Trust in government at all-time low – people accusing petroleum ministry of hiding real import shortage numbers"
+  ],
+  "live_feed": [
+    {
+      "platform": "X",
+      "username": "@BHU_StudentsUnion",
+      "timestamp": "1h ago",
+      "text": "LPG खत्म! BHU mess बंद 4 दिन से। छात्र भूखे सो रहे हैं। प्रशासन कुछ नहीं कर रहा। आज पूरे कैंपस में BANDH! PM Modi जगो! #LPGShortageIndia #MessBandh ",
+      "likes": 2156,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "X",
+      "username": "@PatnaUnivVoice
+",
+      "timestamp": "2h ago",
+      "text": "Patna University mess में LPG cylinders गायब। Students ने सड़क जाम कर दिया। Commercial cylinder ₹2800 में बिक रहा। सरकार सो रही है क्या? #LPGCrisis #CollegeBandh",
+      "likes": 1348,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/DelhiPGStudent",
+      "timestamp": "45m ago",
+      "text": "My PG in Delhi has no LPG since 6 days. Mess closed. We are ordering Swiggy every meal – ₹400-500 daily extra. Commercial price hike is killing us. Anyone else in same boat? #LPGShortage",
+      "likes": 289,
+      "emotion": "Fear"
+    },
+    {
+      "platform": "X",
+      "username": "@AISA_DU
+",
+      "timestamp": "3h ago",
+      "text": "DU North Campus mess bandh! LPG supply zero. Girls hostel students scared to step out. We demand immediate cylinder distribution and price rollback! #LPGPriceHike #StudentProtest",
+      "likes": 987,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "YouTube",
+      "username": "TheQuint",
+      "timestamp": "4h ago",
+      "text": "Comment: Video of empty LPG godown in Lucknow is shocking. Students on hunger strike. This is government failure. When will they fix LPG shortage? (under live news clip)",
+      "likes": 642,
+      "emotion": "Sadness"
+    },
+    {
+      "platform": "X",
+      "username": "@RJD_StudentWing
+",
+      "timestamp": "2h ago",
+      "text": "Bihar में LPG संकट से colleges बंद। Nitish Kumar और Modi दोनों चुप! Commercial दाम ₹3000। गरीब छात्र भूखे मर रहे हैं। #LPGShortageIndia2026",
+      "likes": 1156,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/MumbaiMessBoy",
+      "timestamp": "1h ago",
+      "text": "Mumbai University hostel mess – no LPG for 5 days. We cooked on induction but electricity bill exploded. Now even that stopped due to power cuts. This crisis is real hell.",
+      "likes": 174,
+      "emotion": "Fear"
+    },
+    {
+      "platform": "X",
+      "username": "@DhabawalaUnion
+",
+      "timestamp": "5h ago",
+      "text": "हमारे 500+ ढाबे बंद! Commercial LPG ₹2400 से ₹3100 हो गया। LPG Shortage ने रोजगार छीन लिया। सरकार तुरंत import करो वरना bigger protest! #LPGPriceHike",
+      "likes": 876,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "YouTube",
+      "username": "ABPNews",
+      "timestamp": "3h ago",
+      "text": "Comment: My son in Allahabad University mess – no food for 2 days. LPG cylinders black market में ₹3500. Modi ji please act now before students health suffers badly. (live protest video)",
+      "likes": 534,
+      "emotion": "Sadness"
+    },
+    {
+      "platform": "X",
+      "username": "@CongressStudent
+",
+      "timestamp": "50m ago",
+      "text": "LPG shortage से पूरे देश में college bandhs! Rahul Gandhi ने कहा – यह जनता के साथ धोखा है। Emergency stocks release करो! #LPGCrisis",
+      "likes": 743,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/UPStudentForum",
+      "timestamp": "2h ago",
+      "text": "Lucknow University bandh today. Mess staff said cylinders not supplied since 10 days. Black marketing at peak. Students planning to march to CM office tomorrow.",
+      "likes": 221,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "X",
+      "username": "@AmbedkarStudents",
+      "timestamp": "4h ago",
+      "text": "Dalit & OBC students सबसे ज्यादा परेशान। LPG खत्म होने से mess बंद, खाना बाहर महंगा। SC/ST scholarship से भी नहीं चल रहा। #LPGShortage #BandhForLPG",
+      "likes": 967,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "YouTube",
+      "username": "IndiaToday",
+      "timestamp": "1h ago",
+      "text": "Comment: Watching protest video from Pune – students burning empty cylinders. Price hike + shortage = double trouble. Government must declare emergency. (under breaking news)",
+      "likes": 398,
+      "emotion": "Surprise"
+    },
+    {
+      "platform": "X",
+      "username": "@VendorBharat
+",
+      "timestamp": "30m ago",
+      "text": "Street vendors का रोजगार खत्म! LPG cylinder ₹3000 में मिल रहा। Holi के बाद भी संकट। BJP govt ने क्या किया? #LPGShortageIndia",
+      "likes": 654,
+      "emotion": "Disgust"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/RealIndianParent",
+      "timestamp": "2h ago",
+      "text": "My daughter in Delhi PG – mess bandh, now paying ₹600 daily for food. LPG home cylinder also delayed. This 2026 crisis is worse than 2020 lockdown. Someone wake up the petroleum ministry!",
+      "likes": 312,
+      "emotion": "Fear"
+    }
+  ],
+  "gemini_recommendations": [
+    "Immediately release 5 lakh emergency LPG cylinders from strategic reserves to all affected college hostels and messes within 48 hours",
+    "Cap commercial LPG prices at ₹2000 for next 30 days and launch crackdown on black-marketing through district-level task forces",
+    "Direct IOCL/HPCL/BPCL to run 24×7 refilling operations in high-impact states (UP, Bihar, Maharashtra, Delhi) with special railway rakes",
+    "Set up 24×7 student helplines and community kitchens in every affected university funded by UGC until normal supply resumes",
+    "Convene emergency all-party meeting with petroleum minister and state CMs to finalise import orders and subsidy restoration plan",
+    "Launch real-time LPG availability dashboard app for colleges and households to prevent panic and black-marketing"
+  ],
+  "strategic_insights_title": "Analysis for #LPG Shortage India Crisis 2026"
+}
+

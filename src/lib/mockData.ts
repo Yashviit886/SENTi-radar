@@ -28,6 +28,7 @@ export interface TopicCard {
   topPhrases: { phrase: string; count: number }[];
   crisisLevel: 'none' | 'low' | 'medium' | 'high';
   volatility: number;
+  preGeneratedData?: any;
 }
 
 export const trendingTopics: TopicCard[] = [

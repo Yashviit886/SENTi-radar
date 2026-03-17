@@ -174,18 +174,84 @@
 
 @layer utilities {
   .panel {
-    @apply bg-card border border-border rounded-lg shadow-sm;
+    @apply bg-card border border-border rounded-xl shadow-sm transition-shadow duration-200;
+  }
+  .panel:hover {
+    @apply shadow-md;
   }
   .panel-header {
-    @apply text-xs font-semibold uppercase tracking-widest text-muted-foreground;
+    @apply text-[11px] font-semibold uppercase tracking-widest text-muted-foreground/70;
   }
   .stat-value {
     @apply text-2xl font-semibold text-foreground tabular-nums tracking-tight;
   }
   .indicator-dot {
-    @apply h-2 w-2 rounded-full;
+    @apply h-2 w-2 rounded-full shrink-0;
   }
   .status-badge {
-    @apply inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide;
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide border;
+  }
+
+  /* Premium KPI card with gradient top border */
+  .kpi-card {
+    @apply bg-card border border-border rounded-xl p-4 flex flex-col relative overflow-hidden shadow-sm;
+  }
+  .kpi-card::before {
+    content: '';
+    @apply absolute top-0 left-0 right-0 h-0.5 rounded-t-xl;
+  }
+  .kpi-card-blue::before  { background: linear-gradient(90deg, hsl(220,60%,58%), hsl(240,60%,70%)); }
+  .kpi-card-purple::before { background: linear-gradient(90deg, hsl(270,50%,58%), hsl(290,55%,68%)); }
+  .kpi-card-green::before  { background: linear-gradient(90deg, hsl(152,55%,42%), hsl(165,50%,50%)); }
+  .kpi-card-amber::before  { background: linear-gradient(90deg, hsl(38,80%,52%), hsl(25,85%,58%)); }
+  .kpi-card-red::before    { background: linear-gradient(90deg, hsl(0,65%,52%), hsl(15,70%,58%)); }
+
+  /* Skeleton shimmer */
+  .skeleton {
+    @apply rounded-md bg-muted/50 animate-pulse;
+  }
+
+  /* Subtle glow per emotion */
+  .glow-fear    { box-shadow: 0 0 0 1px hsl(270,35%,55%/0.3), 0 4px 20px hsl(270,35%,55%/0.1); }
+  .glow-anger   { box-shadow: 0 0 0 1px hsl(0,60%,55%/0.3),   0 4px 20px hsl(0,60%,55%/0.1); }
+  .glow-joy     { box-shadow: 0 0 0 1px hsl(152,50%,42%/0.3), 0 4px 20px hsl(152,50%,42%/0.1); }
+  .glow-sadness { box-shadow: 0 0 0 1px hsl(220,50%,55%/0.3), 0 4px 20px hsl(220,50%,55%/0.1); }
+  .glow-surprise{ box-shadow: 0 0 0 1px hsl(32,65%,55%/0.3),  0 4px 20px hsl(32,65%,55%/0.1); }
+  .glow-disgust { box-shadow: 0 0 0 1px hsl(160,35%,40%/0.3), 0 4px 20px hsl(160,35%,40%/0.1); }
+
+  /* Section heading style (replaces plain uppercase labels) */
+  .section-title {
+    @apply text-sm font-semibold text-foreground flex items-center gap-2;
+  }
+  .section-title::after {
+    content: '';
+    @apply flex-1 h-px bg-border;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(270,50%,65%) 100%);
+  }
+
+  /* Source chip */
+  .source-chip {
+    @apply inline-flex items-center gap-1 text-[10px] font-medium px-2 py-0.5 rounded-full border;
+  }
+  .source-chip-success {
+    @apply bg-green-500/10 text-green-600 dark:text-green-400 border-green-500/20;
+  }
+  .source-chip-error {
+    @apply bg-destructive/10 text-destructive border-destructive/20;
+  }
+  .source-chip-neutral {
+    @apply bg-muted/50 text-muted-foreground border-border;
+  }
+
+  /* Alert ribbon for Active Alert overflow fix */
+  .alert-text-safe {
+    @apply break-words overflow-hidden;
+    word-break: break-all;
+    overflow-wrap: anywhere;
   }
 }

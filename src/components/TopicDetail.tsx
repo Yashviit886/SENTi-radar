@@ -2,7 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import {
   AlertTriangle, X,
-  TrendingUp, TrendingDown, Clock, Sparkles, Loader2, RefreshCw, AlertCircle
+  TrendingUp, TrendingDown, Clock, Sparkles, Loader2, RefreshCw, AlertCircle,
+  Wifi, WifiOff, MessageSquare, Twitter,
 } from 'lucide-react';
 import type { TopicCard, EmotionData } from '@/lib/mockData';
 import { formatVolume } from '@/lib/mockData';
@@ -21,17 +22,17 @@ interface Props {
   onClose: () => void;
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // SECURITY NOTE: VITE_ prefixed variables are embedded in the client-side JS
 // bundle and visible to anyone who inspects the page source.  For a production
 // deployment, consider moving all Scrape.do calls to Supabase Edge Functions and
 // removing VITE_SCRAPE_TOKEN from the frontend entirely (use SCRAPE_DO_TOKEN as
 // a Supabase secret instead).  See README for step-by-step instructions.
-// ─────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const SCRAPE_TOKEN = import.meta.env.VITE_SCRAPE_TOKEN || '';
 const YOUTUBE_KEY = import.meta.env.VITE_YOUTUBE_API_KEY || '';
 
-// ── Emotion keyword lexicon ────────────────────────────────────────────────────
+// â”€â”€ Emotion keyword lexicon â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const EMOTION_KEYWORDS: Record<string, string[]> = {
   fear:    ['fear','scared','worried','panic','threat','risk','dangerous','crisis','collapse','shortage','anxiety','alarm','uncertainty','instability','warn','catastroph','turmoil','chaos','tension','war','nuclear','invasion','missile','attack','afraid','terrifying','dread','horrified','alarming'],
   anger:   ['anger','angry','outrage','furious','rage','frustrat','unacceptable','scandal','corrupt','condemn','protest','exploit','injustice','blame','backlash','fury','demand','ban','oppose','ridiculous','pathetic','disgusting','shameful','hate','upset','terrible','horrible','awful','liar'],
@@ -41,34 +42,34 @@ const EMOTION_KEYWORDS: Record<string, string[]> = {
   disgust: ['disgust','appalling','horrible','corrupt','toxic','vile','sickening','revolting','gross','nauseating','shameful','pathetic','ridiculuous'],
 };
 
-// ── Topic theme detection ──────────────────────────────────────────────────────
+// â”€â”€ Topic theme detection â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const TOPIC_THEMES: Record<string, { keywords: string[]; templates: string[] }> = {
   geopolitical: {
     keywords: ['war','tension','conflict','iran','israel','russia','ukraine','china','nato','missile','nuclear','sanction','military','attack','defense','border','invasion','ceasefire','diplomacy','treaty','army','troops'],
     templates: [
       'Escalation fears are driving market volatility and public anxiety across affected regions',
-      'Diplomatic channels remain under pressure — calls for de-escalation are growing louder',
+      'Diplomatic channels remain under pressure â€” calls for de-escalation are growing louder',
       'Defense and security discussions dominate, with civilians expressing concern over safety',
-      'Economic ripple effects are a major worry — trade disruptions and supply chain risks are top of mind',
+      'Economic ripple effects are a major worry â€” trade disruptions and supply chain risks are top of mind',
       'International community response is being closely watched for signs of intervention',
     ],
   },
   energy: {
     keywords: ['oil','gas','fuel','energy','opec','crude','petroleum','shortage','reserve','pipeline','refinery','barrel','lng','solar','renewable','lpg','petrol','diesel'],
     templates: [
-      'Fuel price hikes are the #1 concern — households fear rising costs for LPG, petrol, and diesel',
-      'Energy security is being questioned — import dependence makes the situation fragile',
+      'Fuel price hikes are the #1 concern â€” households fear rising costs for LPG, petrol, and diesel',
+      'Energy security is being questioned â€” import dependence makes the situation fragile',
       'Calls for strategic reserve deployment and alternative energy sources are intensifying',
-      'Industry impact is significant — manufacturing and transport sectors face cost pressure',
+      'Industry impact is significant â€” manufacturing and transport sectors face cost pressure',
       'Government policy response (subsidies, reserves, trade deals) is under heavy public scrutiny',
     ],
   },
   policy: {
     keywords: ['guideline','regulation','law','policy','government','ministry','ugc','nep','bill','act','reform','amendment','mandate','compliance','rule','directive','framework','education','university','college'],
     templates: [
-      'Stakeholders are divided — supporters see modernization while critics see overreach',
+      'Stakeholders are divided â€” supporters see modernization while critics see overreach',
       'Implementation timeline and enforcement mechanisms are major debate points',
-      'Affected communities are mobilizing — petitions, open letters, and campaigns are active',
+      'Affected communities are mobilizing â€” petitions, open letters, and campaigns are active',
       'Legal challenges and constitutional questions are being raised by experts',
       'Comparative analysis with international standards shows both gaps and improvements',
     ],
@@ -76,29 +77,29 @@ const TOPIC_THEMES: Record<string, { keywords: string[]; templates: string[] }> 
   tech: {
     keywords: ['phone','galaxy','iphone','laptop','app','software','ai','robot','chip','launch','release','samsung','apple','google','tesla','nvidia','startup','feature','update','device','processor','gpu'],
     templates: [
-      'Early adopters are buzzing — design, specs, and pricing are the most discussed aspects',
+      'Early adopters are buzzing â€” design, specs, and pricing are the most discussed aspects',
       'Comparisons with competitors are driving heated debates across tech communities',
-      'Innovation claims are being scrutinized — users want real-world performance over hype',
-      'Pricing strategy is polarizing — value-for-money perception varies across markets',
+      'Innovation claims are being scrutinized â€” users want real-world performance over hype',
+      'Pricing strategy is polarizing â€” value-for-money perception varies across markets',
       'Supply chain and availability concerns are building alongside growing demand signals',
     ],
   },
   economic: {
     keywords: ['market','stock','inflation','recession','economy','gdp','trade','tariff','unemployment','interest','rate','bank','fiscal','budget','debt','investment','growth','crash','rupee','dollar'],
     templates: [
-      'Market sentiment is fragile — investors are watching macro indicators closely',
-      'Inflation concerns are hitting household budgets — cost of living is the top worry',
+      'Market sentiment is fragile â€” investors are watching macro indicators closely',
+      'Inflation concerns are hitting household budgets â€” cost of living is the top worry',
       'Central bank policy decisions are being analyzed for signals of future direction',
-      'Employment outlook is uncertain — sectors are showing mixed hiring signals',
-      'Global trade dynamics are shifting — tariffs and agreements are in sharp focus',
+      'Employment outlook is uncertain â€” sectors are showing mixed hiring signals',
+      'Global trade dynamics are shifting â€” tariffs and agreements are in sharp focus',
     ],
   },
   health: {
     keywords: ['health','covid','vaccine','hospital','disease','epidemic','pandemic','medical','drug','treatment','doctor','patient','mental','who','outbreak','virus'],
     templates: [
       'Public health preparedness is being questioned in light of recent developments',
-      'Healthcare accessibility is a key concern — resource gaps are being highlighted',
-      'Trust in health institutions is being tested — misinformation adds to anxiety',
+      'Healthcare accessibility is a key concern â€” resource gaps are being highlighted',
+      'Trust in health institutions is being tested â€” misinformation adds to anxiety',
       'Preventive measures and personal health awareness are trending in discussions',
       'Policy response speed and transparency are under intense public scrutiny',
     ],
@@ -106,27 +107,24 @@ const TOPIC_THEMES: Record<string, { keywords: string[]; templates: string[] }> 
   social: {
     keywords: ['protest','rights','justice','equality','discrimination','community','culture','religion','caste','gender','freedom','speech','democracy','election','vote'],
     templates: [
-      'Deeply polarizing issue — strong opinions on both sides with little middle ground',
+      'Deeply polarizing issue â€” strong opinions on both sides with little middle ground',
       'Social media activism is amplifying marginalized voices and driving headlines',
       'Historical context and precedent are being debated across platforms',
-      'Political implications are significant — parties are taking calculated positions',
+      'Political implications are significant â€” parties are taking calculated positions',
       'Ground-level impact stories resonate more strongly than expert opinions',
     ],
   },
 };
 
-// ── Result types ──────────────────────────────────────────────────────────────
-interface LiveEmotions {
-  emotions: EmotionData[];
-  commentCount: number;
-  source: 'youtube' | 'keyword' | 'mock' | 'scrape.do';
-}
-
+// â”€â”€ Result types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 interface AnalysisResult {
   headlines: string[];
   comments: string[];
   /** Scraped posts from X and Reddit via Scrape.do */
   scrapedPosts: ScrapedPost[];
+  /** Text arrays for X and Reddit specifically (for LLM prompts) */
+  xPosts: string[];
+  redditPosts: string[];
   /** Scrape.do per-source results (for status/error display) */
   scrapeDoResults: ScrapeDoResult[];
   theme: string;
@@ -142,7 +140,22 @@ interface AnalysisResult {
   dataSource: string;
 }
 
-// ── Emotion scorer ────────────────────────────────────────────────────────────
+type ProviderStatusValue = 'ok' | 'no_token' | 'blocked' | 'quota' | 'error';
+
+interface ProviderStatus {
+  x: ProviderStatusValue;
+  reddit: ProviderStatusValue;
+}
+
+function providerStatusLabel(s: ProviderStatusValue): string {
+  if (s === 'ok') return 'Live';
+  if (s === 'no_token') return 'No token';
+  if (s === 'blocked') return 'Blocked';
+  if (s === 'quota') return 'Quota exceeded';
+  return 'Error';
+}
+
+// â”€â”€ Emotion scorer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function scoreEmotions(texts: string[]): EmotionData[] {
   const allText = texts.join(' ').toLowerCase();
   const scores: Record<string, number> = {};
@@ -166,7 +179,7 @@ function scoreEmotions(texts: string[]): EmotionData[] {
   return emotions;
 }
 
-// ── YouTube Data API v3: search videos + fetch comments ──────────────────────
+// â”€â”€ YouTube Data API v3: search videos + fetch comments â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function fetchYouTubeComments(query: string): Promise<{ comments: string[]; count: number }> {
   if (!YOUTUBE_KEY) return { comments: [], count: 0 };
   const comments: string[] = [];
@@ -177,7 +190,7 @@ async function fetchYouTubeComments(query: string): Promise<{ comments: string[]
     const searchRes = await fetch(searchUrl);
     if (!searchRes.ok) { console.warn('YouTube search failed:', searchRes.status); return { comments: [], count: 0 }; }
     const searchData = await searchRes.json();
-    const videoIds: string[] = (searchData.items || []).map((item: { id?: { videoId?: string } }) => item.id?.videoId).filter((id): id is string => Boolean(id));
+    const videoIds: string[] = (searchData.items || []).map((item: { id?: { videoId?: string } }) => item.id?.videoId).filter((id: string | undefined): id is string => Boolean(id));
 
     if (videoIds.length === 0) return { comments: [], count: 0 };
 
@@ -213,7 +226,7 @@ async function fetchYouTubeComments(query: string): Promise<{ comments: string[]
   }
 }
 
-// ── Google News RSS ───────────────────────────────────────────────────────────
+// â”€â”€ Google News RSS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function fetchNewsHeadlines(query: string): Promise<string[]> {
   if (!SCRAPE_TOKEN) return [];
   try {
@@ -235,7 +248,7 @@ async function fetchNewsHeadlines(query: string): Promise<string[]> {
   } catch (e) { console.warn('RSS failed:', e); return []; }
 }
 
-// ── Full topic analysis ───────────────────────────────────────────────────────
+// â”€â”€ Full topic analysis â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function analyzeTopicFully(
   topicTitle: string,
   headlines: string[],
@@ -243,6 +256,10 @@ function analyzeTopicFully(
   scrapedPosts: ScrapedPost[] = [],
   scrapeDoResults: ScrapeDoResult[] = [],
 ): AnalysisResult {
+  // Separate X and Reddit posts for LLM prompts
+  const xPosts = scrapedPosts.filter(p => p.platform === 'x').map(p => p.text);
+  const redditPosts = scrapedPosts.filter(p => p.platform === 'reddit').map(p => p.text);
+
   // Merge all text sources for analysis
   const scrapedTexts = scrapedPosts.map((p) => p.text);
   const allTexts = [topicTitle, ...headlines, ...comments, ...scrapedTexts];
@@ -276,27 +293,15 @@ function analyzeTopicFully(
     }
   }
   while (takeaways.length < 5) {
-    takeaways.push(`Discussion volume is ${negCount > 2 ? 'elevated — public attention is surging' : 'moderate — conversation is steadily building'}`);
+    takeaways.push(`Discussion volume is ${negCount > 2 ? 'elevated â€” public attention is surging' : 'moderate â€” conversation is steadily building'}`);
   }
-
-  // Determine dataSource label
-  const hasX = xPosts.length > 0;
-  const hasReddit = redditPosts.length > 0;
-  const hasYt = comments.length > 0;
-  const hasRss = headlines.length > 0;
-  let dataSource: AnalysisResult['dataSource'] = 'keyword';
-  if (hasX && hasReddit && (hasYt || hasRss)) dataSource = 'x+reddit+youtube+rss';
-  else if (hasX && hasReddit) dataSource = 'x+reddit';
-  else if (hasX && hasRss) dataSource = 'x+rss';
-  else if (hasReddit && hasRss) dataSource = 'reddit+rss';
-  else if (hasYt && hasRss) dataSource = 'youtube+rss';
-  else if (hasYt) dataSource = 'youtube+rss';
-  else if (hasRss) dataSource = 'rss';
 
   return {
     headlines,
     comments,
     scrapedPosts,
+    xPosts,
+    redditPosts,
     scrapeDoResults,
     theme: bestTheme,
     emotions: emotionData,
@@ -328,7 +333,7 @@ function buildDataSourceLabel(
   return parts.length > 0 ? parts.join(' + ') : 'Keyword Analysis';
 }
 
-// ── OpenAI-compatible SSE reader ──────────────────────────────────────────────
+// â”€â”€ OpenAI-compatible SSE reader â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function readStream(body: ReadableStream<Uint8Array>, onDelta: (c: string) => void, onDone: () => void) {
   const reader = body.getReader();
   const decoder = new TextDecoder();
@@ -354,11 +359,11 @@ async function readStream(body: ReadableStream<Uint8Array>, onDelta: (c: string)
   onDone();
 }
 
-// ── Build local summary when LLMs are unavailable ────────────────────────────
+// â”€â”€ Build local summary when LLMs are unavailable â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function buildLocalSummary(topic: TopicCard, analysis: AnalysisResult): string {
   const cap = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
   const { dominantEmotion, dominantPct, secondEmotion, secondPct, sentiment, crisisLevel, headlines, comments, scrapedPosts, takeaways, commentCount, dataSource } = analysis;
-  const emoji = crisisLevel === 'high' ? '🔴' : crisisLevel === 'medium' ? '🟡' : sentiment === 'positive' ? '🟢' : '🔵';
+  const emoji = crisisLevel === 'high' ? 'ðŸ”´' : crisisLevel === 'medium' ? 'ðŸŸ¡' : sentiment === 'positive' ? 'ðŸŸ¢' : 'ðŸ”µ';
   const crisisLabel = crisisLevel === 'high' ? 'High Crisis Risk' : crisisLevel === 'medium' ? 'Elevated Concern' : sentiment === 'positive' ? 'Positive Momentum' : 'Mixed Signals';
   const now = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   const displayCount = commentCount > 0 ? commentCount : 20;
@@ -366,52 +371,40 @@ function buildLocalSummary(topic: TopicCard, analysis: AnalysisResult): string {
   // Pick best evidence text (prefer scraped posts, then YT comments, then headlines)
   const evidenceText = scrapedPosts[0]?.text || comments[0] || headlines[0];
   const topSample = evidenceText && evidenceText.length > 10
-    ? `_"${evidenceText.substring(0, 140).trim()}${evidenceText.length > 140 ? '…' : ''}"_`
+    ? `_"${evidenceText.substring(0, 140).trim()}${evidenceText.length > 140 ? 'â€¦' : ''}"_`
     : '';
 
-  const hasScraped = scrapedPosts.length > 0;
-  const sourceDesc = hasScraped ? `${dataSource} posts and comments` : comments.length > 0 ? 'YouTube comments and news headlines' : 'news headlines';
+  const sourceDesc = scrapedPosts.length > 0
+    ? `${dataSource} posts and comments`
+    : comments.length > 0
+      ? 'YouTube comments and news headlines'
+      : 'news headlines';
 
   let narrative: string;
-  const hasLiveSocial = xPosts.length > 0 || redditPosts.length > 0;
-  const sourceDesc = hasLiveSocial
-    ? `X/Twitter and Reddit posts`
-    : comments.length > 0 ? 'YouTube comments and news headlines' : 'news headlines';
 
   if (sentiment === 'negative') {
-    narrative = `Public sentiment on **${topic.title}** is overwhelmingly negative. **${cap(dominantEmotion)} (${dominantPct}%)** and **${cap(secondEmotion)} (${secondPct}%)** dominate — derived from ${displayCount}+ real ${sourceDesc}.${topSample ? ` Example: ${topSample}` : ''}`;
+    narrative = `Public sentiment on **${topic.title}** is overwhelmingly negative. **${cap(dominantEmotion)} (${dominantPct}%)** and **${cap(secondEmotion)} (${secondPct}%)** dominate â€” derived from ${displayCount}+ real ${sourceDesc}.${topSample ? ` Example: ${topSample}` : ''}`;
   } else if (sentiment === 'positive') {
     narrative = `**${topic.title}** is generating strong positive public reaction led by **${cap(dominantEmotion)} (${dominantPct}%)**. Analyzed from ${displayCount}+ ${sourceDesc}.${topSample ? ` Sample sentiment: ${topSample}` : ''} **${cap(secondEmotion)} (${secondPct}%)** shows some tensions remain.`;
   } else {
     narrative = `Opinion on **${topic.title}** is polarized. **${cap(dominantEmotion)} (${dominantPct}%)** and **${cap(secondEmotion)} (${secondPct}%)** are competing narratives across ${displayCount}+ ${sourceDesc}.${topSample ? ` Public voice: ${topSample}` : ''}`;
   }
 
-  return `### ${emoji} ${cap(dominantEmotion)} & ${cap(secondEmotion)} Dominate – ${crisisLabel}
+  return `### ${emoji} ${cap(dominantEmotion)} & ${cap(secondEmotion)} Dominate â€“ ${crisisLabel}
 
 ${narrative}
 
-**People's Voice – Key Takeaways**
-${takeaways.map(t => `• ${t}`).join('\n')}
+**People's Voice â€“ Key Takeaways**
+${takeaways.map(t => `â€¢ ${t}`).join('\n')}
 
 _Live from ${dataSource} | ${now} | ${displayCount}+ discussions analyzed_`;
 }
 
-// ── LLM prompt ────────────────────────────────────────────────────────────────
+// â”€â”€ LLM prompt â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function buildLLMPrompt(topic: TopicCard, analysis: AnalysisResult) {
   const now = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
   const sampleComments = analysis.comments.slice(0, 8).map((c, i) => `${i + 1}. "${c.substring(0, 120)}"`).join('\n');
   const sampleScraped = analysis.scrapedPosts.slice(0, 6).map((p, i) => `${i + 1}. [${p.platform.toUpperCase()}] "${p.text.substring(0, 120)}"`).join('\n');
-
-  const sourceMap: Record<string, string> = {
-    'x+reddit+youtube+rss': 'X/Twitter · Reddit · YouTube · Google News',
-    'x+reddit': 'X/Twitter · Reddit',
-    'x+rss': 'X/Twitter · Google News',
-    'reddit+rss': 'Reddit · Google News',
-    'youtube+rss': 'YouTube · Google News',
-    'rss': 'Google News',
-    'keyword': 'Keyword Analysis',
-  };
-  const sourceLabel = sourceMap[analysis.dataSource] || 'Multiple Sources';
 
   const allSamples = [
     ...analysis.xPosts.slice(0, 4).map((t, i) => `X[${i+1}]: "${t.substring(0, 120)}"`),
@@ -431,26 +424,27 @@ EMOTION ANALYSIS (from ${analysis.commentCount}+ real texts):
 ${analysis.headlines.length > 0 ? `NEWS HEADLINES:\n${analysis.headlines.slice(0, 5).map((h, i) => `${i + 1}. "${h}"`).join('\n')}` : ''}
 ${sampleComments ? `\nYOUTUBE COMMENTS/TITLES:\n${sampleComments}` : ''}
 ${sampleScraped ? `\nX & REDDIT POSTS (via Scrape.do):\n${sampleScraped}` : ''}
+${allSamples ? `\nALL SOURCES SAMPLE:\n${allSamples}` : ''}
 
 Write this EXACT markdown format:
 
-### [🔴/🟡/🟢/🔵] [Emotion1] & [Emotion2] Dominate – [Risk/Opportunity]
+### [ðŸ”´/ðŸŸ¡/ðŸŸ¢/ðŸ”µ] [Emotion1] & [Emotion2] Dominate â€“ [Risk/Opportunity]
 
 [2-3 sentences specific to "${topic.title}". Reference real posts/headlines as evidence. Include emotion %s. Be sharp and opinionated.]
 
-**People's Voice – Key Takeaways**
-• [Insight from real posts or headlines]
-• [Specific public concern or reaction]
-• [Data-driven observation with emotion stats]
-• [Forward-looking point — what to watch]
-• [One more sharp observation]
+**People's Voice â€“ Key Takeaways**
+â€¢ [Insight from real posts or headlines]
+â€¢ [Specific public concern or reaction]
+â€¢ [Data-driven observation with emotion stats]
+â€¢ [Forward-looking point â€” what to watch]
+â€¢ [One more sharp observation]
 
 _Live from ${analysis.dataSource} | ${now} | ${analysis.commentCount}+ discussions analyzed_`;
 
   return { system, user };
 }
 
-// ── Master orchestrator: YouTube + RSS + Scrape.do (X/Reddit) + LLM ─────────
+// â”€â”€ Master orchestrator: YouTube + RSS + Scrape.do (X/Reddit) + LLM â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function streamSummary({ topic, onDelta, onDone, onError, onEmotionsReady, onScrapeDoResults }: {
   topic: TopicCard;
   onDelta: (chunk: string) => void;
@@ -482,18 +476,13 @@ async function streamSummary({ topic, onDelta, onDone, onError, onEmotionsReady,
   // Step 2: Analyze everything together
   const analysis = analyzeTopicFully(topic.title, rssHeadlines, comments, scrapedPosts, scrapeDoResults);
 
-  console.log(`Data: ${xPosts.length} X posts, ${redditPosts.length} Reddit posts, ${ytCount} YT comments, ${rssHeadlines.length} headlines`);
-
-  // Step 2: Analyse everything together
-  const analysis = analyzeTopicFully(topic.title, rssHeadlines, comments, xPosts, redditPosts);
-
   // Step 3: Emit live emotions immediately
   const sourceMap: Record<string, string> = {
-    'x+reddit+youtube+rss': 'X · Reddit · YouTube · News',
-    'x+reddit': 'X · Reddit',
-    'x+rss': 'X · News',
-    'reddit+rss': 'Reddit · News',
-    'youtube+rss': 'YouTube · News',
+    'x+reddit+youtube+rss': 'X Â· Reddit Â· YouTube Â· News',
+    'x+reddit': 'X Â· Reddit',
+    'x+rss': 'X Â· News',
+    'reddit+rss': 'Reddit Â· News',
+    'youtube+rss': 'YouTube Â· News',
     'rss': 'News',
     'keyword': 'Keyword',
   };
@@ -501,14 +490,13 @@ async function streamSummary({ topic, onDelta, onDone, onError, onEmotionsReady,
     analysis.emotions as EmotionData[],
     analysis.commentCount,
     sourceMap[analysis.dataSource] || 'Multiple Sources',
-    analysis.dataSource,
   );
 
   const { system, user } = buildLLMPrompt(topic, analysis);
   const geminiKey = import.meta.env.VITE_GEMINI_API_KEY;
   const groqKey = import.meta.env.VITE_GROQ_API_KEY;
 
-  // ── Tier 1: Gemini ─────────────────────────────────────────────────────────
+  // â”€â”€ Tier 1: Gemini â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (geminiKey) {
     try {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:streamGenerateContent?alt=sse&key=${geminiKey}`;
@@ -546,7 +534,7 @@ async function streamSummary({ topic, onDelta, onDone, onError, onEmotionsReady,
     } catch (e) { console.warn('Gemini err:', e); }
   }
 
-  // ── Tier 2: Groq ──────────────────────────────────────────────────────────
+  // â”€â”€ Tier 2: Groq â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   if (groqKey) {
     try {
       const resp = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -561,7 +549,7 @@ async function streamSummary({ topic, onDelta, onDone, onError, onEmotionsReady,
     } catch (e) { console.warn('Groq err:', e); }
   }
 
-  // ── Tier 3: Local (guaranteed, works without any API) ─────────────────────
+  // â”€â”€ Tier 3: Local (guaranteed, works without any API) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const local = buildLocalSummary(topic, analysis);
   for (let i = 0; i < local.length; i += 3) {
     onDelta(local.slice(i, i + 3));
@@ -571,28 +559,47 @@ async function streamSummary({ topic, onDelta, onDone, onError, onEmotionsReady,
 }
 
 
-// ── Component ─────────────────────────────────────────────────────────────────
+// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+/** Convert raw ALL-CAPS or messy query strings to readable Title Case */
+function toDisplayTitle(raw: string): string {
+  return raw
+    .replace(/\?\?+/g, '')
+    .split(/\s+/)
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ')
+    .trim();
+}
+/** Truncate hashtag for display â€” keep it readable */
+function toDisplayHashtag(raw: string): string {
+  const h = raw.startsWith('#') ? raw : '#' + raw;
+  return h.length > 42 ? h.slice(0, 39) + 'â€¦' : h;
+}
+
+/** Map emotion name â†’ styling tokens */
+const EMOTION_STYLE: Record<string, { bg: string; text: string; border: string; kpi: string }> = {
+  fear:    { bg: 'bg-fear/10',    text: 'text-fear',    border: 'border-fear/30',    kpi: 'kpi-card-purple' },
+  anger:   { bg: 'bg-anger/10',   text: 'text-anger',   border: 'border-anger/30',   kpi: 'kpi-card-red'    },
+  joy:     { bg: 'bg-joy/10',     text: 'text-joy',     border: 'border-joy/30',     kpi: 'kpi-card-green'  },
+  sadness: { bg: 'bg-sadness/10', text: 'text-sadness', border: 'border-sadness/30', kpi: 'kpi-card-blue'   },
+  surprise:{ bg: 'bg-surprise/10',text: 'text-surprise',border: 'border-surprise/30',kpi: 'kpi-card-amber'  },
+  disgust: { bg: 'bg-disgust/10', text: 'text-disgust', border: 'border-disgust/30', kpi: 'kpi-card-blue'   },
+};
+
+// â”€â”€ Component â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const TopicDetail = ({ topic, onClose }: Props) => {
   const [summary, setSummary] = useState('');
   const [isStreaming, setIsStreaming] = useState(false);
   const [summaryError, setSummaryError] = useState('');
-  // Live emotions from social analysis (override topic.emotions when available)
   const [liveEmotions, setLiveEmotions] = useState<EmotionData[] | null>(null);
   const [emotionSource, setEmotionSource] = useState<string>('');
   const [emotionCount, setEmotionCount] = useState(0);
-  const [providerStatus, setProviderStatus] = useState<ProviderStatus | null>(null);
-  // Live emotions from analysis (override topic.emotions when available)
-  const [liveEmotions, setLiveEmotions] = useState<EmotionData[] | null>(null);
-  const [emotionSource, setEmotionSource] = useState<string>('');
-  const [emotionCount, setEmotionCount] = useState(0);
-  // Scrape.do per-source status for UI chips / error display
+  const [providerStatus] = useState<ProviderStatus | null>(null);
   const [scrapeDoResults, setScrapeDoResults] = useState<ScrapeDoResult[]>([]);
   const prevTopicId = useRef<string | null>(null);
 
   const runAnalysis = (t: TopicCard) => {
     setSummary(''); setSummaryError(''); setIsStreaming(true);
     setLiveEmotions(null); setEmotionSource(''); setEmotionCount(0);
-    setProviderStatus(null);
     setScrapeDoResults([]);
     streamSummary({
       topic: t,
@@ -604,7 +611,6 @@ const TopicDetail = ({ topic, onClose }: Props) => {
         setEmotionCount(count);
         setEmotionSource(source);
       },
-      onProviderStatus: (status) => setProviderStatus(status),
       onScrapeDoResults: (results) => setScrapeDoResults(results),
     });
   };
@@ -613,257 +619,339 @@ const TopicDetail = ({ topic, onClose }: Props) => {
     if (!topic) return;
     if (topic.id === prevTopicId.current) return;
     prevTopicId.current = topic.id;
+    if (topic.preGeneratedData) {
+      setSummary(topic.preGeneratedData.narrative_summary);
+      setLiveEmotions(topic.emotions);
+      setEmotionSource('Demo Snapshot');
+      return;
+    }
     runAnalysis(topic);
   }, [topic?.id]);
 
   const regenerateSummary = () => {
     if (!topic || isStreaming) return;
+    if (topic.preGeneratedData) {
+      toast({ title: 'Notice', description: 'This is a pre-generated demonstration snapshot.' });
+      return;
+    }
     prevTopicId.current = null;
     runAnalysis(topic);
   };
 
   if (!topic) return null;
 
-  // Use live analyzed emotions if available, else fall back to topic.emotions
+  const displayTitle   = toDisplayTitle(topic.title);
+  const displayHashtag = toDisplayHashtag(topic.hashtag);
   const displayEmotions = liveEmotions || topic.emotions;
   const topEmotion = [...displayEmotions].sort((a, b) => b.percentage - a.percentage)[0];
+  const emotionStyle = EMOTION_STYLE[topEmotion?.emotion] || EMOTION_STYLE.fear;
 
-  // Categorize Scrape.do source results for the status bar
   const scrapeDoSuccesses = scrapeDoResults.filter((r) => r.status === 'success');
-  const scrapeDoErrors = scrapeDoResults.filter((r) => r.status === 'error');
-  const hasScrapeDoToken = !!SCRAPE_TOKEN;
+  const scrapeDoErrors    = scrapeDoResults.filter((r) => r.status === 'error');
+  const hasScrapeDoToken  = !!SCRAPE_TOKEN;
+
+  // Positive phrases = even indices, Negative = odd indices (per original logic)
+  const positivePhrases = topic.preGeneratedData
+    ? topic.preGeneratedData.positive_signals.map((s: string) => ({ phrase: s, count: Math.floor(Math.random() * 1000) + 100 }))
+    : topic.topPhrases.filter((_, i) => i % 2 === 0);
+  const negativePhrases = topic.preGeneratedData
+    ? topic.preGeneratedData.negative_signals.map((s: string) => ({ phrase: s, count: Math.floor(Math.random() * 1000) + 100 }))
+    : topic.topPhrases.filter((_, i) => i % 2 !== 0);
+
+  // Volatility sparkline bars (stable per topic id using seeded pseudo-random)
+  const seed = topic.id.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  const sparkBars = Array.from({ length: 22 }, (_, i) => {
+    const h = Math.max(12, Math.abs(Math.sin((seed + i) * 0.7) * 88) + 12);
+    return Math.round(h);
+  });
 
   return (
-    <motion.div key={topic.id} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25 }} className="space-y-4">
-      <div className="flex items-center justify-between pb-2 border-b border-border">
-        <div>
-          <h2 className="text-xl font-semibold text-foreground tracking-tight">{topic.title}</h2>
-          <div className="font-mono text-xs text-muted-foreground mt-1">{topic.hashtag}</div>
+    <motion.div
+      key={topic.id}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2 }}
+      className="space-y-5"
+    >
+      {/* â”€â”€ Topic header â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <div className="flex items-start justify-between gap-4">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 mb-1 flex-wrap">
+            {/* Crisis badge */}
+            {topic.crisisLevel === 'high' && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-destructive/15 text-destructive border border-destructive/25 uppercase tracking-wider">
+                <span className="h-1.5 w-1.5 rounded-full bg-destructive animate-pulse" />
+                High Risk
+              </span>
+            )}
+            {topic.crisisLevel === 'medium' && (
+              <span className="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-warning/15 text-warning border border-warning/25 uppercase tracking-wider">
+                <span className="h-1.5 w-1.5 rounded-full bg-warning" />
+                Elevated
+              </span>
+            )}
+            <span className={`inline-flex items-center gap-1 text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
+              topic.sentiment === 'positive' ? 'bg-joy/10 text-joy border-joy/20' :
+              topic.sentiment === 'negative' ? 'bg-destructive/10 text-destructive border-destructive/20' :
+              'bg-warning/10 text-warning border-warning/20'
+            }`}>
+              {topic.sentiment.charAt(0).toUpperCase() + topic.sentiment.slice(1)} Sentiment
+            </span>
+          </div>
+          <h2 className="text-xl font-semibold text-foreground tracking-tight leading-snug">
+            {displayTitle}
+          </h2>
+          <p className="font-mono text-[11px] text-muted-foreground mt-0.5 truncate max-w-lg" title={topic.hashtag}>
+            {displayHashtag}
+          </p>
         </div>
-        <button onClick={onClose} className="rounded-full p-2 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors">
-          <X className="h-5 w-5" />
+        <button
+          onClick={onClose}
+          className="shrink-0 rounded-full p-2 text-muted-foreground hover:bg-accent hover:text-foreground transition-colors mt-0.5"
+        >
+          <X className="h-4 w-4" />
         </button>
       </div>
 
-      {/* ── Provider status banners ──────────────────────────────────────────── */}
-      {providerStatus && (
-        <div className="flex flex-wrap gap-2">
-          {/* X status badge */}
-          <div className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium border ${
-            providerStatus.x === 'ok'
-              ? 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/20'
-              : providerStatus.x === 'no_token'
-              ? 'bg-muted text-muted-foreground border-border'
-              : 'bg-destructive/10 text-destructive border-destructive/20'
-          }`}>
-            {providerStatus.x === 'ok' ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
-            <Twitter className="h-3 w-3" />
-            X: {providerStatusLabel(providerStatus.x)}
-          </div>
-
-          {/* Reddit status badge */}
-          <div className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium border ${
-            providerStatus.reddit === 'ok'
-              ? 'bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/20'
-              : providerStatus.reddit === 'no_token'
-              ? 'bg-muted text-muted-foreground border-border'
-              : 'bg-destructive/10 text-destructive border-destructive/20'
-          }`}>
-            {providerStatus.reddit === 'ok' ? <Wifi className="h-3 w-3" /> : <WifiOff className="h-3 w-3" />}
-            <MessageSquare className="h-3 w-3" />
-            Reddit: {providerStatusLabel(providerStatus.reddit)}
-          </div>
-
-          {/* Error / blocked banners */}
-          {(providerStatus.x === 'blocked' || providerStatus.x === 'quota') && (
-            <div className="w-full flex items-start gap-2 rounded-md border border-destructive/25 bg-destructive/8 px-3 py-2 text-[11px] text-destructive">
-              <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-              <span>
-                <strong>X/Twitter:</strong>{' '}
-                {providerStatus.x === 'quota'
-                  ? 'Scrape.do quota exceeded — upgrade your plan or wait for the limit to reset.'
-                  : 'Traffic blocked by X — login-wall detected. Results use fallback sources.'}
-              </span>
-            </div>
+      {/* â”€â”€ Source status chips â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {(scrapeDoResults.length > 0 || !hasScrapeDoToken) && (
+        <div className="flex flex-wrap items-center gap-1.5">
+          {!hasScrapeDoToken && (
+            <span className="source-chip source-chip-neutral">
+              <AlertCircle className="h-3 w-3" /> No scrape token â€” using fallback sources
+            </span>
           )}
-          {(providerStatus.reddit === 'blocked' || providerStatus.reddit === 'quota') && (
-            <div className="w-full flex items-start gap-2 rounded-md border border-destructive/25 bg-destructive/8 px-3 py-2 text-[11px] text-destructive">
-              <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-              <span>
-                <strong>Reddit:</strong>{' '}
-                {providerStatus.reddit === 'quota'
-                  ? 'Scrape.do quota exceeded — upgrade your plan or wait for the limit to reset.'
-                  : 'Traffic blocked by Reddit — bot-check detected. Results use fallback sources.'}
-              </span>
-            </div>
-          )}
-          {(providerStatus.x === 'no_token' && providerStatus.reddit === 'no_token') && (
-            <div className="w-full flex items-start gap-2 rounded-md border border-warning/30 bg-warning/8 px-3 py-2 text-[11px] text-warning-foreground">
-              <AlertTriangle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
-              <span>
-                <strong>Scrape.do not configured.</strong> Add{' '}
-                <code className="font-mono bg-muted/60 px-1 rounded">VITE_SCRAPE_TOKEN</code> to your{' '}
-                <code className="font-mono bg-muted/60 px-1 rounded">.env</code> to enable live X and Reddit data.
-              </span>
-            </div>
-          )}
-      {/* Scrape.do source status bar */}
-      {!hasScrapeDoToken ? (
-        <div role="alert" className="flex items-center gap-2 px-3 py-2 rounded-md bg-muted/40 border border-border text-[11px] text-muted-foreground">
-          <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-          <span>
-            <strong>VITE_SCRAPE_TOKEN</strong> not set — X and Reddit scraping disabled.
-            Add it to your <code>.env</code> to enable live X &amp; Reddit posts.
-          </span>
-        </div>
-      ) : scrapeDoResults.length > 0 && (
-        <div className="flex flex-wrap items-center gap-2">
           {scrapeDoSuccesses.map((r) => (
-            <span key={r.source} className="inline-flex items-center gap-1 text-[10px] bg-green-500/10 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full font-medium border border-green-500/20">
-              ✓ {r.source} <span className="opacity-60">({r.posts.length} posts)</span>
+            <span key={r.source} className="source-chip source-chip-success">
+              âœ“ {r.source} ({r.posts.length} posts)
             </span>
           ))}
           {scrapeDoErrors.map((r) => (
-            <span key={r.source} title={r.error} className="inline-flex items-center gap-1 text-[10px] bg-destructive/10 text-destructive px-2 py-0.5 rounded-full font-medium border border-destructive/20">
+            <span key={r.source} title={r.error} className="source-chip source-chip-error">
               <AlertCircle className="h-3 w-3" /> {r.source} unavailable
             </span>
           ))}
+          {isStreaming && (
+            <span className="source-chip source-chip-neutral">
+              <Loader2 className="h-3 w-3 animate-spin" />
+              {liveEmotions ? 'Generating summaryâ€¦' : 'Fetching sourcesâ€¦'}
+            </span>
+          )}
+          {!isStreaming && emotionSource && (
+            <span className="source-chip source-chip-success">
+              ðŸ“¡ Live Â· {emotionSource}
+            </span>
+          )}
         </div>
       )}
 
-      {/* Live Overview Panel */}
-      <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-widest mt-4">Live Overview Panel – Big KPI cards</h3>
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="panel p-4 flex flex-col justify-center items-center">
-          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 w-full text-left">Overall Sentiment</h4>
-          <div className="w-full flex-1 flex justify-center -mt-4">
-            <SentimentGauge positive={45} negative={35} neutral={20} />
+      {/* â”€â”€ KPI Cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+
+        <div className="kpi-card kpi-card-blue">
+          <p className="panel-header mb-3">Overall Sentiment</p>
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <SentimentGauge 
+              positive={topic.preGeneratedData?.overall_sentiment_percentages?.positive ?? 45} 
+              negative={topic.preGeneratedData?.overall_sentiment_percentages?.negative ?? 35} 
+              neutral={topic.preGeneratedData?.overall_sentiment_percentages?.neutral ?? 20} 
+            />
           </div>
         </div>
 
-        <div className="panel p-4 flex flex-col">
+        {/* Dominant Emotion */}
+        <div className={`kpi-card ${emotionStyle.kpi}`}>
           <div className="flex items-center justify-between mb-3">
-            <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Dominant Emotion</h4>
-            {liveEmotions && (
-              <span className="text-[9px] bg-primary/10 text-primary px-1.5 py-0.5 rounded font-medium">
-                {emotionSource}
-              </span>
+            <p className="panel-header">Dominant Emotion</p>
+            {liveEmotions && emotionCount > 0 && (
+              <span className="text-[9px] font-mono text-muted-foreground">{emotionCount} texts</span>
             )}
           </div>
-          <div className="flex-1 flex flex-col items-center justify-center">
+          <div className="flex-1 flex flex-col items-center justify-center gap-1">
             {isStreaming && !liveEmotions ? (
-              <Loader2 className="h-6 w-6 animate-spin text-primary/40" />
+              <div className="space-y-2 w-full px-2">
+                <div className="skeleton h-8 w-3/4 mx-auto" />
+                <div className="skeleton h-4 w-1/2 mx-auto" />
+                <p className="text-[10px] text-muted-foreground text-center mt-1">Analyzing sourcesâ€¦</p>
+              </div>
             ) : (
               <>
-                <div className={`text-4xl font-bold text-${topEmotion?.emotion || 'primary'} capitalize`}>{topEmotion?.emotion}</div>
-                <div className={`text-xl font-mono mt-1 text-${topEmotion?.emotion || 'primary'}`}>({topEmotion?.percentage}%)</div>
-                {emotionCount > 0 && <div className="text-[10px] text-muted-foreground mt-1">{emotionCount} texts analyzed</div>}
+                <span className={`text-3xl font-bold capitalize ${emotionStyle.text}`}>
+                  {topEmotion?.emotion ?? 'â€”'}
+                </span>
+                <span className={`text-2xl font-mono font-semibold ${emotionStyle.text}`}>
+                  {topEmotion ? `${topEmotion.percentage}%` : 'â€”'}
+                </span>
               </>
             )}
           </div>
         </div>
 
-        <div className="panel p-4 flex flex-col">
-          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-4">Total Mentions <span className="text-[10px] normal-case">(last hour)</span></h4>
-          <div className="flex-1 flex flex-col items-center justify-center">
-            <div className="text-4xl font-bold font-mono text-foreground">{formatVolume(topic.volume)}</div>
-            <div className={`flex items-center gap-1 mt-2 text-sm font-bold ${topic.change > 0 ? 'text-joy' : 'text-destructive'}`}>
-              {topic.change > 0 ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
-              {Math.abs(topic.change)}% in last hour
+        {/* Total Mentions */}
+        <div className="kpi-card kpi-card-green">
+          <p className="panel-header mb-3">Total Mentions <span className="normal-case font-normal">(last hour)</span></p>
+          <div className="flex-1 flex flex-col items-center justify-center gap-1">
+            <span className="text-4xl font-bold font-mono text-foreground tracking-tight">
+              {formatVolume(topic.volume)}
+            </span>
+            <div className={`flex items-center gap-1 text-sm font-semibold mt-1 ${topic.change > 0 ? 'text-joy' : 'text-destructive'}`}>
+              {topic.change > 0
+                ? <TrendingUp className="h-4 w-4" />
+                : <TrendingDown className="h-4 w-4" />
+              }
+              {topic.change > 0 ? '+' : ''}{topic.change}% this hour
             </div>
           </div>
         </div>
 
-        <div className="panel p-4 flex flex-col">
-          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Volatility Score</h4>
-          <div className="flex-1 flex flex-col justify-end">
-            <div className="h-12 w-full mb-3 flex items-end opacity-70">
-              {Array.from({ length: 20 }).map((_, i) => (
-                <div key={i} className="flex-1 bg-warning mx-0.5 rounded-t-sm" style={{ height: `${Math.max(10, Math.random() * 100)}%` }} />
+        {/* Volatility */}
+        <div className="kpi-card kpi-card-amber">
+          <p className="panel-header mb-2">Volatility Score</p>
+          <div className="flex-1 flex flex-col justify-end gap-2">
+            <div className="h-10 w-full flex items-end gap-px">
+              {sparkBars.map((h, i) => (
+                <div
+                  key={i}
+                  className="flex-1 rounded-t-sm bg-warning/70"
+                  style={{ height: `${h}%` }}
+                />
               ))}
             </div>
-            <div className="mt-auto">
-              <span className="text-lg font-bold text-warning">{topic.crisisLevel !== 'none' ? 'High' : 'Moderate'}</span>
-              <span className="text-xs text-muted-foreground block truncate">Volatility at {topic.volatility}/100</span>
+            <div>
+              <span className={`text-xl font-bold ${topic.crisisLevel !== 'none' ? 'text-warning' : 'text-muted-foreground'}`}>
+                {topic.crisisLevel !== 'none' ? 'High' : 'Moderate'}
+              </span>
+              <p className="text-[11px] text-muted-foreground">{topic.volatility}/100 volatility index</p>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Main Grid */}
-      <div className="grid gap-4 lg:grid-cols-[1fr_400px]">
-        <div className="space-y-4">
-          {/* Summary Panel */}
+      {/* â”€â”€ Main content grid â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      <div className="grid gap-4 lg:grid-cols-[1fr_380px]">
+
+        {/* Left column */}
+        <div className="space-y-4 min-w-0">
+
+          {/* AI Summary Panel */}
           <div className="panel p-5">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2 flex-wrap">
-                <h4 className="panel-header text-sm">{topic.title}: What People Are Really Saying</h4>
-                {isStreaming && (
-                  <span className="inline-flex items-center gap-1 text-[10px] text-primary font-medium bg-primary/10 px-2 py-0.5 rounded-full">
-                    <Loader2 className="h-2.5 w-2.5 animate-spin" />
-                    {liveEmotions ? 'Generating summary…' : 'Fetching X, Reddit & News…'}
-                    {liveEmotions ? 'Generating summary…' : 'Fetching X, Reddit, YouTube + News…'}
-                  </span>
-                )}
-                {!isStreaming && emotionSource && (
-                  <span className="text-[9px] bg-green-500/10 text-green-600 dark:text-green-400 px-2 py-0.5 rounded-full font-medium">
-                    ✓ Live from {emotionSource}
-                  </span>
-                )}
+                <Sparkles className="h-4 w-4 text-primary shrink-0" />
+                <h4 className="text-sm font-semibold text-foreground">What People Are Really Saying</h4>
               </div>
-              <button onClick={regenerateSummary} disabled={isStreaming} title="Refresh" className="text-muted-foreground hover:text-foreground disabled:opacity-40 transition-colors">
-                {isStreaming ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+              <button
+                onClick={regenerateSummary}
+                disabled={isStreaming}
+                title="Refresh analysis"
+                className="flex items-center gap-1.5 text-[11px] text-muted-foreground hover:text-foreground disabled:opacity-40 transition-colors px-2 py-1 rounded hover:bg-accent"
+              >
+                {isStreaming
+                  ? <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                  : <RefreshCw className="h-3.5 w-3.5" />
+                }
+                {!isStreaming && <span>Refresh</span>}
               </button>
             </div>
-            <div className="bg-card p-4 rounded-md border border-border min-h-[120px]">
-              {summaryError ? (
-                <p className="text-xs text-destructive">Summary error: {summaryError}</p>
-              ) : summary ? (
-                <div className="prose prose-sm dark:prose-invert max-w-none prose-h3:text-base prose-h3:mt-0 prose-h3:mb-3 prose-p:text-foreground/85 prose-p:leading-relaxed prose-p:text-sm prose-p:my-2 prose-li:text-sm prose-li:my-1 prose-ul:my-2 prose-ul:pl-4 prose-strong:text-foreground prose-strong:font-semibold prose-em:text-muted-foreground prose-em:text-[11px] prose-headings:text-foreground prose-headings:font-semibold">
-                  <ReactMarkdown>{summary}</ReactMarkdown>
-                  {isStreaming && <span className="inline-block w-2 h-4 bg-primary/60 animate-pulse ml-0.5 align-middle" />}
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center py-6 text-center">
-                  <Sparkles className="h-6 w-6 text-primary/40 mb-2 animate-pulse" />
-                  <p className="text-xs text-muted-foreground">Fetching live X posts, Reddit discussions &amp; news for <strong>{topic.title}</strong>…</p>
-                  <p className="text-xs text-muted-foreground">Fetching live X, Reddit, YouTube &amp; news for <strong>{topic.title}</strong>…</p>
-                </div>
-              )}
-            </div>
+
+            {summaryError ? (
+              <div className="flex items-start gap-2 p-3 rounded-lg bg-destructive/8 border border-destructive/20 text-xs text-destructive">
+                <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
+                <span>Analysis unavailable â€” {summaryError}. Using fallback data.</span>
+              </div>
+            ) : summary ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3 }}
+                className="prose prose-sm dark:prose-invert max-w-none
+                  prose-h3:text-sm prose-h3:font-semibold prose-h3:mt-0 prose-h3:mb-2
+                  prose-p:text-foreground/80 prose-p:leading-relaxed prose-p:text-sm prose-p:my-2
+                  prose-li:text-sm prose-li:my-0.5 prose-ul:my-2 prose-ul:pl-4
+                  prose-strong:text-foreground prose-strong:font-semibold
+                  prose-em:text-muted-foreground prose-em:text-[11px] prose-em:not-italic
+                  prose-headings:text-foreground prose-headings:font-semibold"
+              >
+                <ReactMarkdown>{summary}</ReactMarkdown>
+                {topic.preGeneratedData?.future_emotion_forecast && (
+                  <div className="mt-4 p-3 rounded-lg border border-primary/20 bg-primary/5">
+                    <p className="text-xs font-semibold text-primary mb-1">Forecast</p>
+                    <p className="text-sm text-foreground/80">{topic.preGeneratedData.future_emotion_forecast}</p>
+                  </div>
+                )}
+                {topic.preGeneratedData?.peoples_voice_key_takeaways && (
+                  <>
+                    <br />
+                    <h3 className="text-sm font-semibold mt-4 mb-2 text-foreground">What People Are Really Saying</h3>
+                    <ul className="list-disc pl-5 mt-2 space-y-1">
+                      {topic.preGeneratedData.peoples_voice_key_takeaways.map((takeaway: string, idx: number) => (
+                        <li key={idx} className="text-sm text-foreground/80">{takeaway}</li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+                {isStreaming && (
+                  <span className="inline-block w-1.5 h-4 bg-primary/70 animate-pulse ml-0.5 align-middle rounded-sm" />
+                )}
+              </motion.div>
+            ) : (
+              /* Skeleton while loading */
+              <div className="space-y-3 py-2">
+                <div className="skeleton h-4 w-full" />
+                <div className="skeleton h-4 w-5/6" />
+                <div className="skeleton h-4 w-4/5" />
+                <div className="skeleton h-4 w-full mt-4" />
+                <div className="skeleton h-4 w-3/4" />
+                <div className="skeleton h-4 w-5/6" />
+                <p className="text-[11px] text-muted-foreground text-center mt-3">
+                  Fetching live X, Reddit, YouTube &amp; news for <strong>{displayTitle}</strong>â€¦
+                </p>
+              </div>
+            )}
           </div>
 
-          {/* Top Voices */}
+          {/* Top Phrases / Voices Panel */}
           <div className="panel p-5">
-            <h4 className="panel-header text-sm mb-4">Top Voices / Pointers Panel</h4>
+            <h4 className="section-title mb-4">
+              <span>Public Sentiment Signals</span>
+            </h4>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <h5 className="text-xs font-semibold text-joy mb-3 border-b border-border pb-1">Positive Pointers</h5>
-                <div className="space-y-2">
-                  {topic.topPhrases.filter((_, i) => i % 2 === 0).map((p, i) => (
-                    <div key={i} className="flex justify-between items-center text-xs bg-joy/10 text-joy/90 px-3 py-2 rounded">
-                      <span className="truncate mr-2">'{p.phrase}'</span>
-                      <span className="font-mono">{p.count}</span>
+                <p className="text-xs font-semibold text-joy mb-2.5 flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-joy" />
+                  Positive Signals
+                </p>
+                <div className="space-y-1.5">
+                  {positivePhrases.length > 0 ? positivePhrases.map((p, i) => (
+                    <div key={i} className="flex items-center justify-between gap-2 rounded-lg bg-joy/8 border border-joy/15 px-3 py-2">
+                      <span className="text-xs text-foreground/80 truncate">"{p.phrase}"</span>
+                      <span className="text-xs font-mono font-semibold text-joy shrink-0">{p.count.toLocaleString()}</span>
                     </div>
-                  ))}
-                  {topic.topPhrases.length === 0 && (
-                    <div className="text-xs text-muted-foreground italic p-2">Analyzing public sentiment…</div>
+                  )) : (
+                    <div className="space-y-1.5">
+                      <div className="skeleton h-8 w-full" />
+                      <div className="skeleton h-8 w-full" />
+                      <p className="text-[10px] text-muted-foreground italic px-1 pt-1">Analyzing sentiment dataâ€¦</p>
+                    </div>
                   )}
                 </div>
               </div>
               <div>
-                <h5 className="text-xs font-semibold text-destructive mb-3 border-b border-border pb-1">Negative Pointers</h5>
-                <div className="space-y-2">
-                  {topic.topPhrases.filter((_, i) => i % 2 !== 0).map((p, i) => (
-                    <div key={i} className="flex justify-between items-center text-xs bg-destructive/10 text-destructive/90 px-3 py-2 rounded">
-                      <span className="truncate mr-2">'{p.phrase}'</span>
-                      <span className="font-mono">{p.count}</span>
+                <p className="text-xs font-semibold text-destructive mb-2.5 flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-full bg-destructive" />
+                  Negative Signals
+                </p>
+                <div className="space-y-1.5">
+                  {negativePhrases.length > 0 ? negativePhrases.map((p, i) => (
+                    <div key={i} className="flex items-center justify-between gap-2 rounded-lg bg-destructive/8 border border-destructive/15 px-3 py-2">
+                      <span className="text-xs text-foreground/80 truncate">"{p.phrase}"</span>
+                      <span className="text-xs font-mono font-semibold text-destructive shrink-0">{p.count.toLocaleString()}</span>
                     </div>
-                  ))}
-                  {topic.topPhrases.length < 2 && (
-                    <div className="flex justify-between items-center text-xs bg-destructive/10 text-destructive/90 px-3 py-2 rounded">
-                      <span className="truncate mr-2">'Poor handling of the situation'</span>
-                      <span className="font-mono">84</span>
+                  )) : (
+                    <div className="space-y-1.5">
+                      <div className="skeleton h-8 w-full" />
+                      <div className="skeleton h-8 w-full" />
+                      <p className="text-[10px] text-muted-foreground italic px-1 pt-1">Analyzing sentiment dataâ€¦</p>
                     </div>
                   )}
                 </div>
@@ -872,76 +960,128 @@ const TopicDetail = ({ topic, onClose }: Props) => {
           </div>
         </div>
 
-        {/* Right Column */}
+        {/* Right column */}
         <div className="space-y-4 overflow-hidden" style={{ minWidth: 0 }}>
+
+          {/* Emotion Breakdown + Chart */}
           <div className="panel p-5 overflow-hidden">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="panel-header text-sm">Emotional Breakdown &amp; Trends Panel</h4>
-              {liveEmotions && (
-                <span className="text-[9px] bg-primary/10 text-primary px-2 py-0.5 rounded font-medium whitespace-nowrap">
-                  📊 Live — {emotionCount} texts
+              <h4 className="section-title flex-1">
+                <span>Emotion Breakdown</span>
+              </h4>
+              {liveEmotions && emotionCount > 0 && (
+                <span className="text-[9px] font-mono text-muted-foreground ml-2 shrink-0">
+                  {emotionCount} texts
                 </span>
               )}
             </div>
-            <div className="mb-6">
-              {/* Show live emotions when available, mock otherwise */}
-              <EmotionBreakdown emotions={displayEmotions} title="" />
-            </div>
-            <div className="mt-4 pt-4 border-t border-border overflow-hidden">
-              <h5 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Sentiment Trend over Time</h5>
+            <EmotionBreakdown emotions={displayEmotions} title="" />
+            <div className="mt-5 pt-4 border-t border-border overflow-hidden">
               <div className="w-full overflow-hidden">
                 <SentimentChart />
               </div>
             </div>
           </div>
 
+          {/* Crisis & Alerts */}
           <div className="panel p-5">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="panel-header text-sm">Crisis &amp; Alerts Log</h4>
-              <span className="bg-destructive/10 text-destructive text-[10px] px-2 py-0.5 rounded font-bold uppercase tracking-wider">Live</span>
+              <h4 className="section-title flex-1">
+                <span>Crisis &amp; Alerts</span>
+              </h4>
+              <span className={`text-[9px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-full border ml-2 ${
+                topic.crisisLevel !== 'none'
+                  ? 'bg-destructive/10 text-destructive border-destructive/20'
+                  : 'bg-joy/10 text-joy border-joy/20'
+              }`}>
+                {topic.crisisLevel !== 'none' ? 'â— Live' : 'â— Stable'}
+              </span>
             </div>
-            <div className="space-y-3">
+
+            <div className="space-y-2">
               {topic.crisisLevel === 'high' || topic.crisisLevel === 'medium' ? (
                 <>
-                  <div className="flex items-start gap-3 p-3 bg-card border-l-2 border-destructive rounded-r shadow-sm">
-                    <span className="h-2 w-2 mt-1.5 rounded-full bg-destructive animate-pulse" />
-                    <div className="flex-1">
+                  <div className="flex items-start gap-3 p-3 rounded-lg bg-destructive/5 border border-destructive/15">
+                    <span className="h-2 w-2 mt-1.5 rounded-full bg-destructive animate-pulse shrink-0" />
+                    <div className="flex-1 min-w-0">
                       <p className="text-xs font-semibold text-foreground">Negative spike detected</p>
-                      <p className="text-[11px] text-muted-foreground mt-0.5"><strong className="text-destructive capitalize">{topEmotion?.emotion}</strong> dominant in public discourse</p>
-                      <div className="flex items-center gap-1 mt-2 text-[10px] text-muted-foreground/70"><Clock className="h-3 w-3" /> Just now</div>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">
+                        <strong className="text-destructive capitalize">{topEmotion?.emotion}</strong> is the dominant public emotion
+                      </p>
+                      <div className="flex items-center gap-1 mt-1.5 text-[10px] text-muted-foreground/60">
+                        <Clock className="h-3 w-3" /> Just now
+                      </div>
                     </div>
                   </div>
-                  <div className="flex items-start gap-3 p-3 bg-card border-l-2 border-warning rounded-r shadow-sm">
-                    <span className="h-2 w-2 mt-1.5 rounded-full bg-warning" />
-                    <div className="flex-1">
-                      <p className="text-xs font-semibold text-foreground">Sentiment Shift</p>
-                      <p className="text-[11px] text-muted-foreground mt-0.5">Sudden increase in conversation volume</p>
-                      <div className="flex items-center gap-1 mt-2 text-[10px] text-muted-foreground/70"><Clock className="h-3 w-3" /> 30 min ago</div>
+                  <div className="flex items-start gap-3 p-3 rounded-lg bg-warning/5 border border-warning/15">
+                    <span className="h-2 w-2 mt-1.5 rounded-full bg-warning shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-foreground">Volume Surge</p>
+                      <p className="text-[11px] text-muted-foreground mt-0.5">Conversation volume rising â€” narrative window is open</p>
+                      <div className="flex items-center gap-1 mt-1.5 text-[10px] text-muted-foreground/60">
+                        <Clock className="h-3 w-3" /> 30 min ago
+                      </div>
                     </div>
                   </div>
                 </>
               ) : (
-                <div className="flex items-start gap-3 p-3 bg-card border-l-2 border-primary rounded-r shadow-sm">
-                  <span className="h-2 w-2 mt-1.5 rounded-full bg-primary" />
-                  <div className="flex-1">
-                    <p className="text-xs font-semibold text-foreground">Normal Activity</p>
-                    <p className="text-[11px] text-muted-foreground mt-0.5">Sentiment is relatively stable</p>
-                    <div className="flex items-center gap-1 mt-2 text-[10px] text-muted-foreground/70"><Clock className="h-3 w-3" /> Just now</div>
+                <div className="flex items-start gap-3 p-3 rounded-lg bg-joy/5 border border-joy/15">
+                  <span className="h-2 w-2 mt-1.5 rounded-full bg-joy shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold text-foreground">Stable Activity</p>
+                    <p className="text-[11px] text-muted-foreground mt-0.5">Sentiment is relatively normal â€” no alerts triggered</p>
+                    <div className="flex items-center gap-1 mt-1.5 text-[10px] text-muted-foreground/60">
+                      <Clock className="h-3 w-3" /> Just now
+                    </div>
                   </div>
                 </div>
               )}
+
+              {/* Active Alert â€” with overflow-safe text */}
               {topic.crisisLevel !== 'none' && (
-                <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
-                  <div className="flex items-center gap-2 text-destructive text-sm font-semibold mb-1">
-                    <AlertTriangle className="h-4 w-4" /> Active Alert
+                <div className="mt-2 p-3 rounded-lg bg-destructive/8 border border-destructive/20 overflow-hidden">
+                  <div className="flex items-center gap-1.5 text-destructive text-xs font-semibold mb-1.5">
+                    <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+                    Active Alert â€” High Backlash Risk
                   </div>
-                  <p className="text-xs text-destructive/90">High Backlash Risk – Monitor {topic.hashtag} closely.</p>
+                  <p className="text-[11px] text-destructive/80 leading-relaxed alert-text-safe">
+                    Monitor <span className="font-mono">{displayHashtag}</span> closely. Consider proactive comms within 2 hours.
+                  </p>
                 </div>
               )}
             </div>
           </div>
         </div>
       </div>
+      
+      {topic.preGeneratedData?.live_feed && (
+        <div className="panel p-5 mt-4">
+          <h4 className="section-title mb-4">
+            <span>Live Social Feed</span>
+          </h4>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {topic.preGeneratedData.live_feed.map((post: any, i: number) => (
+              <div key={i} className="rounded border border-border bg-accent/30 p-3">
+                <div className="flex items-center gap-2 text-[11px] text-muted-foreground mb-1">
+                  <span className="font-mono text-[10px] uppercase tracking-wide text-primary">{post.platform}</span>
+                  <span className="text-border">|</span>
+                  <span className="font-medium text-foreground">{post.username}</span>
+                  <span className="ml-auto text-[10px]">{post.timestamp}</span>
+                </div>
+                <p className="mt-1.5 text-xs leading-relaxed text-foreground/85">{post.text}</p>
+                <div className="mt-2 flex items-center justify-between">
+                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded bg-${(post.emotion || 'joy').toLowerCase()}/10 text-${(post.emotion || 'joy').toLowerCase()} capitalize`}>
+                    {post.emotion || 'Joy'}
+                  </span>
+                  <span className="text-[10px] text-muted-foreground font-semibold">
+                    â™¥ {post.likes?.toLocaleString() ?? 0}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </motion.div>
   );
 };

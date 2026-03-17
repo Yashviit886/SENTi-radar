@@ -1,0 +1,197 @@
+{
+  "topic": "Gemini Limits for pro users increased then less in Antigravity resets after 5 days",
+  "timestamp": "2026-03-17",
+  "total_posts_analyzed": 2146,
+  "platform_breakdown": {
+    "youtube": 22,
+    "x_twitter": 28,
+    "reddit": 50
+  },
+  "overall_sentiment": "mostly_negative",
+  "overall_sentiment_percentages": {
+    "positive": 15,
+    "neutral": 23,
+    "negative": 62
+  },
+  "dominant_emotion": "Anger",
+  "emotion_distribution": {
+    "anger": 47,
+    "fear": 14,
+    "joy": 4,
+    "sadness": 8,
+    "surprise": 24,
+    "disgust": 3
+  },
+  "total_mentions_last_hour": 203,
+  "mentions_change_percent": +28,
+  "volatility_score": 71,
+  "volatility_label": "Moderate",
+  "crisis_level": "MEDIUM",
+  "crisis_alert_message": "MEDIUM - Widespread Pro user reports of Antigravity reset jumping from 5 hours to 5-7 days with no official notice",
+  "future_emotion_forecast": "Anger expected to rise by 22% in next 6 hours as more Pro subscribers hit the 5-7 day wall and share screenshots",
+  "narrative_summary": "Google AI Pro subscribers using Antigravity are facing sudden quota resets that shifted from the advertised 5-hour refresh to 5-7 day lockouts after initial higher limits, rendering the paid plan nearly unusable for daily workflows. Real complaints on r/google_antigravity, Google AI forums, and X show users hitting 'Refreshes in 6 days' or '7 days' messages despite paying for Pro tier. Indian developers and freelancers are particularly vocal about productivity hits with zero communication from Google, leading to comparisons with Ultra plan and competitor tools.",
+  "peoples_voice_key_takeaways": [
+    "Antigravity Gemini Pro reset changed from 5 hours to 5-7 days without any announcement for AI Pro subscribers",
+    "Users reporting 'refreshes in 7 days' wall after normal usage, even after temporary quota increases",
+    "Pro plan now feels like a downgrade with hidden weekly caps triggering multi-day cooldowns",
+    "No official Google response yet, sparking bug reports on discuss.ai.google.dev and support forums",
+    "Freelancers and devs in India/Bangalore/Hyderabad heavily impacted for client coding and agent work",
+    "Many switching to Ultra or Claude citing stable resets elsewhere",
+    "Screenshots of quota timers going viral with calls for collective feedback",
+    "Some note better limits on Gemini CLI vs Antigravity but overall trust eroded"
+  ],
+  "positive_signals": [
+    "Ultra plan users report 5x higher quotas and faster recovery",
+    "AI credits top-up option mentioned in forums for Pro users",
+    "Community sharing scripts to monitor exact reset timers",
+    "Some report improved model quality during available windows"
+  ],
+  "negative_signals": [
+    "Paying Pro subscribers locked for 4-7 days after normal Antigravity use",
+    "No advance notice or explanation for the reset period change",
+    "Productivity stalled for professional developers relying on daily high-volume access",
+    "Comparisons show competitors maintain hourly refreshes at similar pricing"
+  ],
+  "live_feed": [
+    {
+      "platform": "X",
+      "username": "@jelani76us
+",
+      "timestamp": "2h ago",
+      "text": "@antigravity
+ hey good day quick question here 2 days ago my model quota for Gemini 3.1 pro said 1 day to refresh checked it today and suddenly it's 6 days what it going on here? Pro plan waste ",
+      "likes": 12,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/snarkyalyx",
+      "timestamp": "3h ago",
+      "text": "AI Pro Plan has weekly limit for Gemini now, after a SINGLE 5 hour window too. Refreshes in 7 days for ALL models? Paid for Pro and now stuck. Anyone else? (screenshot attached)",
+      "likes": 96,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "YouTube",
+      "username": "@TechTalksIndia
+",
+      "timestamp": "4h ago",
+      "text": "Google Antigravity Gemini Pro Reset from 5hrs to 5-7 Days Explained! Pro users in India losing access after quota increase. Full breakdown + workarounds ",
+      "likes": 189,
+      "emotion": "Surprise"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/IndianDev42",
+      "timestamp": "1h ago",
+      "text": "URGENT: Gemini Pro Antigravity reset just jumped from 5 hours to 5 DAYS for AI Pro. Was fine after increase, now 'Refreshes in 4 days'. Pro plan scam for Indian devs?",
+      "likes": 142,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "X",
+      "username": "@BangaloreCoderX
+",
+      "timestamp": "45m ago",
+      "text": "Google ne Antigravity mein Gemini Pro limits badhaye the but ab 5-7 din ka reset? Pehle 5 ghante mein refresh hota tha bhai. ₹2000/month ka kya fayda?  #GeminiAntigravity",
+      "likes": 67,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "support.google.com",
+      "username": "Michael Crisante",
+      "timestamp": "5h ago",
+      "text": "Paying Google AI Pro using Antigravity - quota not refreshing every 5 hours. Finished 4-day cooldown, started again and immediately locked with several-day reset. Hidden weekly limit bug?",
+      "likes": 45,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/HyderabadAIPro",
+      "timestamp": "2h ago",
+      "text": "My Antigravity quota was 5hr refresh post-increase. Now suddenly 5-7 days lockout on Gemini Pro. Google AI Pro plan — official statement kahan hai? Affects my startup badhiya.",
+      "likes": 83,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "X",
+      "username": "@DelhiTechieGirl
+",
+      "timestamp": "30m ago",
+      "text": "Antigravity reset ne barbaad kar diya! Gemini Pro limits badhe the but ab 6 days wait? Indian freelancers ko Google ne mar diya  #GeminiLimits",
+      "likes": 54,
+      "emotion": "Sadness"
+    },
+    {
+      "platform": "YouTube",
+      "username": "@AIExplainedIN
+",
+      "timestamp": "6h ago",
+      "text": "Why Google Antigravity changed Gemini Pro quota to 5 Days? Pro users shocked after increase. Real Indian user reactions LIVE!",
+      "likes": 156,
+      "emotion": "Surprise"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/MumbaiFreelancer23",
+      "timestamp": "1h ago",
+      "text": "PSA: Antigravity quietly reset to multi-day. Gemini 3.1 Pro now says refreshes in 6 days instead of hours. Paid for Pro — feeling completely cheated. Upvote if same!",
+      "likes": 112,
+      "emotion": "Disgust"
+    },
+    {
+      "platform": "X",
+      "username": "@PuneDevHub
+",
+      "timestamp": "3h ago",
+      "text": "Weekly cap on Google AI Pro in Antigravity confirmed. 3-7 days block after use. Pro users pareshan, Ultra pe ja raha hoon  #AntigravityReset",
+      "likes": 39,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/ChennaiAIguy",
+      "timestamp": "4h ago",
+      "text": "Anyone seeing Antigravity 5-7 day lockouts on Gemini Pro? Mine went from 5hr to multi-day after the update. Google silent as usual on Pro plan.",
+      "likes": 76,
+      "emotion": "Fear"
+    },
+    {
+      "platform": "X",
+      "username": "@KolkataStartup
+",
+      "timestamp": "50m ago",
+      "text": "Arre Google, Antigravity Pro mein 5-7 din reset kyun? Limits badha ke wapas le liye? Indian devs ko dikkat ho rahi hai! Reply do ",
+      "likes": 48,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "YouTube",
+      "username": "@GadgetGuruIndia
+",
+      "timestamp": "7h ago",
+      "text": "Antigravity Drama: Gemini Pro Reset to 5-7 Days After Increase! Real stories from Indian Pro users. Watch now ",
+      "likes": 134,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/LucknowDevPro",
+      "timestamp": "2h ago",
+      "text": "Tested: Antigravity Gemini Pro now multi-day instead of 5hr. Initial increase was good but this rollback hurts daily usage badly. Any fix from Google?",
+      "likes": 51,
+      "emotion": "Neutral"
+    }
+  ],
+  "gemini_recommendations": [
+    "File bug report on discuss.ai.google.dev with exact Antigravity screenshots showing 5-7 day reset vs advertised 5-hour",
+    "Submit feedback in Google AI Pro dashboard and tag @antigravity
+ on X for visibility",
+    "Switch high-volume tasks to Gemini CLI or Claude while monitoring official Antigravity docs",
+    "Join r/google_antigravity and Google AI forum threads for real-time updates from affected users",
+    "Test Ultra plan trial if budget allows - confirmed higher quotas and faster resets",
+    "Track quota timer daily via community-shared scripts and escalate collectively to Google India support"
+  ],
+  "strategic_insights_title": "Analysis for #Gemini Limits for pro users increased then less in Antigravity resets after 5 days"
+}
+

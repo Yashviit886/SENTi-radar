@@ -593,6 +593,23 @@ const AIInsightsPanel = ({ topic, emotions }: Props) => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [chatMessages]);
 
+  useEffect(() => {
+    if (topic?.preGeneratedData?.gemini_recommendations) {
+      setDataSource('Demo Snapshot');
+      setGenerationStage('complete');
+      setIsGenerating(false);
+      const md = "### AI Strategic Insights & Recommendations\n\n" + 
+                 topic.preGeneratedData.gemini_recommendations.map((r: string, i: number) => `**Action ${i+1}:** ${r}`).join("\n\n") +
+                 "\n\n_Generated from demonstration snapshot_";
+      setReport(md);
+      reportRef.current = md;
+    } else {
+      resetReport();
+      setGenerationStage('idle');
+      setDataSource('');
+    }
+  }, [topic?.id]);
+
   return (
     <div className="panel overflow-hidden">
       {/* Header */}
@@ -621,9 +638,9 @@ const AIInsightsPanel = ({ topic, emotions }: Props) => {
             </p>
           </div>
         </div>
-        <Button size="sm" variant="outline" onClick={generateReport} disabled={isGenerating} className="gap-2">
+        <Button size="sm" variant="outline" onClick={generateReport} disabled={isGenerating || !!topic?.preGeneratedData} className="gap-2">
           {isGenerating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <RefreshCw className="h-3.5 w-3.5" />}
-          {report ? 'Regenerate' : 'Generate Report'}
+          {topic?.preGeneratedData ? 'Snapshot Locked' : report ? 'Regenerate' : 'Generate Report'}
         </Button>
       </div>
 

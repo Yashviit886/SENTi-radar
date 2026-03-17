@@ -19,6 +19,7 @@ const Index = () => {
   const [selectedTopic, setSelectedTopic] = useState<TopicCard | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [isPreGeneratedLoading, setIsPreGeneratedLoading] = useState(false);
 
   const { data: dbTopics, isLoading, refetch: refetchTopics } = useTopics();
   const analyzeMutation = useAnalyzeTopic();
@@ -37,6 +38,64 @@ const Index = () => {
   const handleSearch = async (query: string) => {
     setSearchQuery(query);
     saveSearchMutation.mutate({ query });
+
+    const normalizedTopic = query.trim().toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+    
+    setIsPreGeneratedLoading(true);
+    try {
+      // First fetch the index of available mock files
+      const indexRes = await fetch(`/data/topics/index.json`);
+      if (indexRes.ok) {
+        const files: string[] = await indexRes.json();
+        // find best match based on substrings
+        const match = files.find(f => {
+          const fn = f.replace('.json', '');
+          return fn.includes(normalizedTopic) || normalizedTopic.includes(fn);
+        });
+
+        if (match) {
+          const res = await fetch(`/data/topics/${match}`);
+      if (res.ok) {
+        const mockData = await res.json();
+        
+        const emotionsMapping = Object.entries(mockData.emotion_distribution).map(([k, v]) => ({
+          emotion: k as any,
+          percentage: Number(v),
+          count: 0
+        }));
+        
+        const mappedData: TopicCard = {
+           id: "mock_" + normalizedTopic,
+           title: mockData.topic || query,
+           hashtag: "#" + normalizedTopic.replace(/_/g, ''),
+           platform: "both",
+           sentiment: mockData.overall_sentiment.replace('mostly_', '') as any,
+           volume: mockData.total_mentions_last_hour,
+           change: mockData.mentions_change_percent,
+           emotions: emotionsMapping,
+           summary: mockData.narrative_summary,
+           keyTakeaways: mockData.peoples_voice_key_takeaways,
+           topPhrases: [],
+           crisisLevel: mockData.crisis_level.toLowerCase() as any,
+           volatility: mockData.volatility_score,
+           preGeneratedData: mockData
+        };
+        
+        setSelectedTopic(mappedData);
+        setSearchQuery("");
+        toast({
+          title: "✅ Analysis Complete",
+          description: `"${mappedData.title}" analysis loaded from demonstration snapshot.`,
+        });
+        setIsPreGeneratedLoading(false);
+        return;
+      }
+        }
+      }
+    } catch (e) {
+      console.log("Mock data not found, falling back to live analysis");
+    }
+    setIsPreGeneratedLoading(false);
 
     analyzeMutation.mutate(
       { query },
@@ -112,7 +171,7 @@ const Index = () => {
             <div className="mx-auto max-w-[1200px] px-4 py-5 lg:px-6 space-y-4">
               <TopicSearch
                 onSearch={handleSearch}
-                isAnalyzing={analyzeMutation.isPending}
+                isAnalyzing={analyzeMutation.isPending || isPreGeneratedLoading}
               />
 
               {selectedTopic ? (
@@ -126,7 +185,7 @@ const Index = () => {
                     emotions={selectedTopic.emotions}
                   />
                 </div>
-              ) : analyzeMutation.isPending ? (
+              ) : (analyzeMutation.isPending || isPreGeneratedLoading) ? (
                 <div className="flex flex-col items-center justify-center py-24 text-center">
                   <div className="bg-primary/10 p-4 rounded-full mb-4 text-primary animate-pulse">
                     <Activity className="h-8 w-8" />

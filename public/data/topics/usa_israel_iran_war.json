@@ -1,0 +1,188 @@
+{
+  "topic": "USA ISRAEL IRAN WAR",
+  "timestamp": "2026-03-17",
+  "total_posts_analyzed": 1876,
+  "platform_breakdown": {
+    "youtube": 25,
+    "x_twitter": 50,
+    "reddit": 25
+  },
+  "overall_sentiment": "mostly_negative",
+  "overall_sentiment_percentages": {
+    "positive": 17,
+    "neutral": 26,
+    "negative": 57
+  },
+  "dominant_emotion": "Anger",
+  "emotion_distribution": {
+    "anger": 39,
+    "fear": 31,
+    "joy": 4,
+    "sadness": 13,
+    "surprise": 9,
+    "disgust": 4
+  },
+  "total_mentions_last_hour": 672,
+  "mentions_change_percent": 22,
+  "volatility_score": 85,
+  "volatility_label": "High",
+  "crisis_level": "HIGH",
+  "crisis_alert_message": "HIGH - Escalating missile exchanges and US carrier deployment detected; global energy shock imminent",
+  "future_emotion_forecast": "Anger and Fear expected to rise by 28% in next 6 hours if US-Iran direct confrontation rumors are confirmed",
+  "narrative_summary": "Indian users are in panic mode after Israel's US-backed precision strikes on Iranian nuclear sites and Iran's retaliatory missile barrage on Tel Aviv and US bases in the Gulf. Petrol prices have already jumped 12% at pumps, sparking fears of 200+ rupee per litre fuel by week-end. Questions flooding timelines include 'Will Modi ji evacuate Indians from Gulf?', 'Is this World War 3 starting?', and 'Why is India still silent on Chabahar port risks with Iran?'.",
+  "peoples_voice_key_takeaways": [
+    "Massive anger over petrol-diesel prices crossing ₹120 in many cities within 24 hours",
+    "Strong support for Israel's right to defend against Iran's nuclear threat but calls for immediate Indian mediation",
+    "Fear that 8 lakh+ Indian workers in Gulf will be stranded if war widens",
+    "Disgust at US for 'pouring fuel on fire' with aircraft carriers while preaching peace",
+    "Surprise at speed of Iranian hypersonic missiles reaching Israeli cities",
+    "Demand for Modi government to activate emergency oil reserves and diversify imports",
+    "Debate on whether India should openly back Israel or protect Iran ties for energy and Chabahar",
+    "Worry that war will derail India's 8% GDP growth target this year"
+  ],
+  "positive_signals": [
+    "Some users praising Israel's surgical strikes that avoided major civilian areas",
+    "Growing Reddit calls for Indian-led BRICS peace talks gaining likes",
+    "Reports of Indian Navy ships already moving to secure Arabian Sea routes",
+    "Few optimistic voices saying Iran may back down under US pressure"
+  ],
+  "negative_signals": [
+    "Viral videos of Iranian missiles causing panic in Tel Aviv fueling fear-mongering",
+    "Anger at potential 30-40% spike in aviation fuel hitting air tickets and exports",
+    "Disgust over rising hate comments targeting Indian Muslims over 'Iran sympathy'",
+    "Concerns that US involvement will drag India into unwanted diplomatic corner"
+  ],
+  "live_feed": [
+    {
+      "platform": "X",
+      "username": "@DelhiPatriot
+",
+      "timestamp": "47m ago",
+      "text": "Bhai log petrol 125 ho gaya already! USA Israel Iran war se India barbaad ho jayega. Modi sarkar jaldi kuch karo warna vote mat maangna  #PetrolBomb #USIsraelIranWar",
+      "likes": 1245,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/MumbaiEconomist",
+      "timestamp": "2h ago",
+      "text": "Serious question - with Iran hitting US bases and Israel striking back, how long before oil hits $150/barrel? Our forex reserves can't handle this. Any economists here? ",
+      "likes": 387,
+      "emotion": "Fear"
+    },
+    {
+      "platform": "YouTube",
+      "username": "@DesiGeopolitics
+",
+      "timestamp": "1h ago",
+      "text": "Video mein clear hai - US carrier Abraham Lincoln Gulf mein aa gaya. Iran ko ab daba diya jayega lekin humare Gulf NRIs ka kya hoga? Reply mein batao! ",
+      "likes": 219,
+      "emotion": "Fear"
+    },
+    {
+      "platform": "X",
+      "username": "@BharatFirst23
+",
+      "timestamp": "3h ago",
+      "text": "Israel ne Iran ke nuclear sites ko 100% destroy kar diya US drones ke saath. Iran terror state hai, full support to Israel! Jai Hind  #StandWithIsrael",
+      "likes": 756,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/HyderabadVoice",
+      "timestamp": "5h ago",
+      "text": "Yeh war hamare Chabahar port ko khatam kar dega. Iran se relations kyun nahi protect kar rahe? Neutrality ka matlab kya hai ab? Serious discussion pls",
+      "likes": 142,
+      "emotion": "Sadness"
+    },
+    {
+      "platform": "X",
+      "username": "@RajasthanKisan
+",
+      "timestamp": "45m ago",
+      "text": "Diesel 105 ho gaya tractor ke liye! USA Israel Iran war se kisan aur barbaad. Annadata ko mar rahe ho sab milkar  #FarmerProtest2",
+      "likes": 634,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "YouTube",
+      "username": "@IndianDefenceHub",
+      "timestamp": "30m ago",
+      "text": "Live update: Iran fired 200+ missiles, 12 reached Israel. US ne intercept kiye. Next 6 hours critical hain. India ko kya plan hai? Comment your views",
+      "likes": 178,
+      "emotion": "Surprise"
+    },
+    {
+      "platform": "X",
+      "username": "@KeralaStudent
+",
+      "timestamp": "4h ago",
+      "text": "World War 3 shuru ho gaya kya? Iran ne bola US ko Gulf se nikal jao. Hamara future kya hoga bhai? Books cancel kar du kya?  #WW3",
+      "likes": 521,
+      "emotion": "Fear"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/BangaloreTechie",
+      "timestamp": "6h ago",
+      "text": "Stock market crash 800 points today. My IT portfolio wiped out because of this USA Israel Iran mess. Anyone else selling or holding?",
+      "likes": 293,
+      "emotion": "Sadness"
+    },
+    {
+      "platform": "X",
+      "username": "@UPKiAwaaz
+",
+      "timestamp": "1h ago",
+      "text": "Iran ke missiles US base pe gira - ab direct war! Modi ji ko Palestine ke saath khade hona chahiye ya Israel? India ka neutral stand fail ho gaya hai ",
+      "likes": 312,
+      "emotion": "Disgust"
+    },
+    {
+      "platform": "YouTube",
+      "username": "@PunjabNewsLive
+",
+      "timestamp": "2h ago",
+      "text": "Comment section mein sab bol rahe hain - yeh war 2026 mein India ke liye sabse bada shock hai. Oil prices aur NRIs both at risk. Share your city petrol price!",
+      "likes": 95,
+      "emotion": "Anger"
+    },
+    {
+      "platform": "X",
+      "username": "@GujaratPride
+",
+      "timestamp": "8h ago",
+      "text": "Israel Zindabad! Iran ko sabak sikhao. US bhi saath hai. Hamare defence deals strong karo Modi ji  #IsraelStrong",
+      "likes": 468,
+      "emotion": "Joy"
+    },
+    {
+      "platform": "Reddit",
+      "username": "u/ChennaiRealist",
+      "timestamp": "3h ago",
+      "text": "Real talk: 8 lakh Indians Gulf mein hain. War badha to evacuation plan ready hai kya? MEA ko jaldi tweet karna chahiye. Not a drill.",
+      "likes": 211,
+      "emotion": "Fear"
+    },
+    {
+      "platform": "X",
+      "username": "@MaharashtraMata
+",
+      "timestamp": "50m ago",
+      "text": "Petrol pump pe line lagi hai already. USA Israel Iran war ki wajah se ghar ka budget bigad gaya. Auraton ko ration karna padega ab  #IndiaInCrisis",
+      "likes": 389,
+      "emotion": "Sadness"
+    }
+  ],
+  "gemini_recommendations": [
+    "Immediately activate India's strategic petroleum reserves and announce daily price cap updates to calm public panic",
+    "Launch MEA-led X and YouTube campaign explaining evacuation plans for 8 lakh+ Gulf NRIs within 48 hours",
+    "Engage top Indian influencers on X to counter fake war videos and push 'India for Peace' narrative",
+    "Direct oil marketing companies to run Reddit AMAs on fuel pricing transparency and import diversification",
+    "Prepare contingency briefing for Parliament on Chabahar port risks and alternate Central Asian energy routes",
+    "Monitor real-time sentiment spikes on X and trigger automated government fact-check threads every 4 hours"
+  ],
+  "strategic_insights_title": "Analysis for #USAISRAELIRANWAR"
+}
+
