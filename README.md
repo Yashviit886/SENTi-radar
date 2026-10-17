@@ -104,6 +104,10 @@ To add a new source (e.g. Hacker News, LinkedIn):
 - Scrape.do credits are consumed per request. Check your dashboard for usage.
 - X.com's HTML structure changes periodically — the parser in `parseXHtml()` may need updates if Twitter redesigns their markup.
 
+## Researching Topic Context
+
+Use the optional [topic research guide](docs/topic-research.md) to investigate the events behind a monitored topic with Parallel Search MCP in Claude Code. It includes keyless setup and a source-verification prompt. Research notes stay separate from the dashboard's sentiment inputs and scores.
+
 ## Tech Stack
 
 - **Vite** + **TypeScript** + **React 18**
